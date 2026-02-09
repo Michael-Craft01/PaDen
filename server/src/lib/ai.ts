@@ -1,10 +1,10 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
 // User provided key as "Nexa" which is a Google API Key
-const apiKey = process.env.Nexa || process.env.AI_API_KEY;
+const apiKey = process.env.Gemini_API_Key || process.env.Nexa || process.env.AI_API_KEY;
 
 if (!apiKey) {
-    console.warn("⚠️ AI Key (Nexa or AI_API_KEY) is missing. AI features will not work.");
+    console.warn("⚠️ AI Key (Gemini_API_Key, Nexa, or AI_API_KEY) is missing. AI features will not work.");
 }
 
 // Initialize Google AI
