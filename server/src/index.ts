@@ -1,11 +1,9 @@
+import './config';
 import express from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
-import path from 'path';
 import MessagingResponse from 'twilio/lib/twiml/MessagingResponse';
 import { generateResponse } from './lib/ai';
 
-dotenv.config({ path: path.join(__dirname, '../../.env') });
 
 const app = express();
 const port = process.env.PORT || 5000;

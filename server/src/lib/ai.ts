@@ -1,7 +1,4 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import dotenv from 'dotenv';
-
-dotenv.config();
 
 // User provided key as "Nexa" which is a Google API Key
 const apiKey = process.env.Nexa || process.env.AI_API_KEY;
