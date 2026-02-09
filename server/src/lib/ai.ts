@@ -25,7 +25,7 @@ export async function generateResponse(userMessage: string, systemContext: strin
 
         const response = result.response;
         return response.text();
-    } catch (error: any) {
+    } catch (error) {
         console.error('AI Error:', error);
         return "I'm having trouble thinking right now. Please try again later.";
     }

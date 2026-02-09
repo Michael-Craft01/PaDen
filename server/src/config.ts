@@ -1,13 +1,26 @@
 import dotenv from 'dotenv';
 import path from 'path';
 
-// Load .env from project root (one level up from server directory)
-const envPath = path.resolve(process.cwd(), '../.env');
-console.log('🔌 Loading .env from:', envPath);
-const result = dotenv.config({ path: envPath });
+import fs from 'fs';
 
-if (result.error) {
-    console.error('❌ Error loading .env:', result.error);
-} else {
+// Try loading .env from multiple locations
+const possiblePaths = [
+    path.resolve(process.cwd(), '.env'),       // server/.env
+    path.resolve(process.cwd(), '../.env'),    // root/.env
+];
+
+let envPath = '';
+for (const p of possiblePaths) {
+    if (fs.existsSync(p)) {
+        envPath = p;
+        break;
+    }
+}
+
+if (envPath) {
+    console.log('🔌 Loading .env from:', envPath);
+    dotenv.config({ path: envPath });
     console.log('✅ .env loaded successfully');
+} else {
+    console.error('❌ Could not find .env file in:', possiblePaths);
 }
