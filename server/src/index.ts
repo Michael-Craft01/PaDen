@@ -1,9 +1,10 @@
 import './config';
 import express from 'express';
 import cors from 'cors';
-import MessagingResponse from 'twilio/lib/twiml/MessagingResponse';
+import twilio from 'twilio';
 import { generateResponse } from './lib/ai';
 
+const MessagingResponse = twilio.twiml.MessagingResponse;
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -11,6 +12,17 @@ const port = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false })); // Twilio sends form-urlencoded data
+
+// Logging middleware for debugging
+app.use((req, res, next) => {
+    console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+    // Log headers and body only in development for privacy
+    if (process.env.NODE_ENV !== 'production' && req.method === 'POST') {
+        console.log('Headers:', JSON.stringify(req.headers, null, 2));
+        console.log('Body:', JSON.stringify(req.body, null, 2));
+    }
+    next();
+});
 
 app.get('/', (req, res) => {
     res.send('PaDen Backend API is running!');
