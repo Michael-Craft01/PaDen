@@ -1,4 +1,4 @@
-import './config';
+import './config'; // Trigger restart
 import express from 'express';
 import cors from 'cors';
 import MessagingResponse from 'twilio/lib/twiml/MessagingResponse';
@@ -42,7 +42,9 @@ app.post('/api/whatsapp', async (req, res) => {
         twiml.message("I'm having a bit of a brain freeze. Try again later!");
     }
 
-    res.type('text/xml').send(twiml.toString());
+    const xml = twiml.toString();
+    console.log('📤 Sending TwiML:', xml);
+    res.type('text/xml').send(xml);
 });
 
 app.listen(port, () => {
