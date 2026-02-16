@@ -43,11 +43,8 @@ export const PublicLayout = ({ children }: { children: React.ReactNode }) => {
                         {/* Logo */}
                         <Link to="/" className="flex-shrink-0 flex items-center gap-2.5 group">
                             <div className="w-10 h-10 rounded-xl overflow-hidden shadow-lg shadow-purple-900/40">
-                                <img src="/homify-logo.jpg" alt="Homify" className="w-full h-full object-cover" />
+                                <img src="/homify-logo.jpg" alt="Homify" className="w-full h-full object-cover" style={{ mixBlendMode: 'screen', filter: 'brightness(1.1)' }} />
                             </div>
-                            <span className="font-bold text-xl tracking-tight text-white" style={{ fontFamily: "'Outfit', sans-serif" }}>
-                                hom<span className="text-purple-400">ify</span>
-                            </span>
                         </Link>
 
                         {/* Desktop Nav */}
@@ -139,12 +136,9 @@ export const PublicLayout = ({ children }: { children: React.ReactNode }) => {
             }}>
                 <div className="max-w-7xl mx-auto px-4 text-center">
                     <div className="flex items-center justify-center gap-2.5 mb-4">
-                        <div className="w-7 h-7 rounded-lg overflow-hidden shadow-md shadow-purple-900/30">
-                            <img src="/homify-logo.jpg" alt="Homify" className="w-full h-full object-cover" />
+                        <div className="w-8 h-8 rounded-lg overflow-hidden shadow-md shadow-purple-900/30">
+                            <img src="/homify-logo.jpg" alt="Homify" className="w-full h-full object-cover" style={{ mixBlendMode: 'screen', filter: 'brightness(1.1)' }} />
                         </div>
-                        <span className="font-bold text-base text-white" style={{ fontFamily: "'Outfit', sans-serif" }}>
-                            hom<span className="text-purple-400">ify</span>
-                        </span>
                     </div>
                     <p className="text-zinc-600 text-sm">
                         &copy; {new Date().getFullYear()} Homify. Classic Reliability. Modern Tech.

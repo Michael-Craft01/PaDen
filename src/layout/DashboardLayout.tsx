@@ -108,14 +108,9 @@ export const DashboardLayout = ({ children }: { children: React.ReactNode }) => 
                     "flex items-center gap-3 h-16 border-b border-white/[0.04] flex-shrink-0",
                     collapsed ? "justify-center px-3" : "px-5"
                 )}>
-                    <div className="w-9 h-9 rounded-xl overflow-hidden flex-shrink-0 shadow-lg shadow-purple-900/40">
-                        <img src="/homify-logo.jpg" alt="Homify" className="w-full h-full object-cover" />
+                    <div className={clsx("rounded-xl overflow-hidden flex-shrink-0 shadow-lg shadow-purple-900/40", collapsed ? 'w-9 h-9' : 'w-10 h-10')}>
+                        <img src="/homify-logo.jpg" alt="Homify" className="w-full h-full object-cover" style={{ mixBlendMode: 'screen', filter: 'brightness(1.1)' }} />
                     </div>
-                    {!collapsed && (
-                        <span className="text-xl font-bold text-white tracking-tight animate-fade-in" style={{ fontFamily: "'Outfit', sans-serif" }}>
-                            hom<span className="text-purple-400">ify</span>
-                        </span>
-                    )}
                 </div>
 
                 {/* Main Navigation */}
@@ -227,11 +222,8 @@ export const DashboardLayout = ({ children }: { children: React.ReactNode }) => 
                 <div className="flex items-center justify-between px-5 h-16 border-b border-white/[0.04]">
                     <div className="flex items-center gap-3">
                         <div className="w-9 h-9 rounded-xl overflow-hidden shadow-lg shadow-purple-900/40">
-                            <img src="/homify-logo.jpg" alt="Homify" className="w-full h-full object-cover" />
+                            <img src="/homify-logo.jpg" alt="Homify" className="w-full h-full object-cover" style={{ mixBlendMode: 'screen', filter: 'brightness(1.1)' }} />
                         </div>
-                        <span className="text-xl font-bold text-white tracking-tight" style={{ fontFamily: "'Outfit', sans-serif" }}>
-                            hom<span className="text-purple-400">ify</span>
-                        </span>
                     </div>
                     <button onClick={() => setMobileOpen(false)} className="p-2 text-zinc-400 hover:text-white rounded-lg hover:bg-white/[0.04] transition-colors">
                         <X size={20} />

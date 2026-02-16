@@ -33,9 +33,9 @@ export default function Dashboard() {
     const { user } = useAuth();
     const [stats, setStats] = useState({
         activeListings: 0,
-        totalViews: 0,
-        inquiries: 0,
-        revenue: 0,
+        totalProperties: 0,
+        monthlyRevenue: 0,
+        recentCount: 0,
     });
     const [recentProperties, setRecentProperties] = useState<Property[]>([]);
     const [loading, setLoading] = useState(true);
@@ -59,11 +59,16 @@ export default function Dashboard() {
             const allProps = properties || [];
             const active = allProps.filter(p => p.status === 'active');
 
+            // Count properties added this month
+            const now = new Date();
+            const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+            const recentCount = allProps.filter(p => new Date(p.created_at) >= startOfMonth).length;
+
             setStats({
                 activeListings: active.length,
-                totalViews: active.length * 42,
-                inquiries: Math.round(active.length * 3.5),
-                revenue: active.reduce((sum, p) => sum + (p.price || 0), 0),
+                totalProperties: allProps.length,
+                monthlyRevenue: active.reduce((sum, p) => sum + (p.price || 0), 0),
+                recentCount,
             });
 
             setRecentProperties(allProps.slice(0, 4));
@@ -88,41 +93,41 @@ export default function Dashboard() {
             label: 'Active Listings',
             value: stats.activeListings,
             icon: Building2,
-            trend: '+2 this month',
-            trendUp: true,
+            trend: `${stats.totalProperties} total`,
+            trendUp: stats.activeListings > 0,
             gradient: 'from-purple-600/20 to-violet-600/5',
             glowColor: 'shadow-purple-500/10',
             iconBg: 'bg-purple-500/15',
             iconColor: 'text-purple-400',
         },
         {
-            label: 'Total Views',
-            value: stats.totalViews,
+            label: 'Total Properties',
+            value: stats.totalProperties,
             icon: Eye,
-            trend: '+12% this week',
-            trendUp: true,
+            trend: `${stats.recentCount} this month`,
+            trendUp: stats.recentCount > 0,
             gradient: 'from-violet-600/15 to-purple-600/5',
             glowColor: 'shadow-violet-500/10',
             iconBg: 'bg-violet-500/15',
             iconColor: 'text-violet-400',
         },
         {
-            label: 'Inquiries',
-            value: stats.inquiries,
+            label: 'Listed This Month',
+            value: stats.recentCount,
             icon: MessageSquare,
-            trend: '3 unread',
-            trendUp: true,
+            trend: new Date().toLocaleString('default', { month: 'short' }),
+            trendUp: stats.recentCount > 0,
             gradient: 'from-purple-700/15 to-violet-700/5',
             glowColor: 'shadow-purple-500/10',
             iconBg: 'bg-purple-600/15',
             iconColor: 'text-purple-300',
         },
         {
-            label: 'Revenue',
-            value: `$${stats.revenue.toLocaleString()}`,
+            label: 'Monthly Revenue',
+            value: `$${stats.monthlyRevenue.toLocaleString()}`,
             icon: TrendingUp,
-            trend: 'Projected',
-            trendUp: false,
+            trend: `${stats.activeListings} active`,
+            trendUp: stats.monthlyRevenue > 0,
             gradient: 'from-violet-700/15 to-purple-700/5',
             glowColor: 'shadow-violet-500/10',
             iconBg: 'bg-violet-600/15',
