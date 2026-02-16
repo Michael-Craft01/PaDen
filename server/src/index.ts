@@ -1,6 +1,7 @@
 import './config';
 import express from 'express';
 import cors from 'cors';
+import { Twilio } from 'twilio';
 import MessagingResponse from 'twilio/lib/twiml/MessagingResponse';
 import { parseUserIntent, formatSearchResults, generateSimpleResponse } from './lib/ai';
 import { searchProperties, Property } from './lib/propertySearch';
@@ -12,11 +13,69 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+// Initialize Twilio Client (for Async Replies)
+const accountSid = process.env.TWILIO_ACCOUNT_SID;
+const authToken = process.env.TWILIO_AUTH_TOKEN;
+const twilioNumber = process.env.TWILIO_PHONE_NUMBER || 'whatsapp:+14155238886'; // Sandbox default
+
+let client: Twilio | null = null;
+try {
+    if (accountSid && authToken) {
+        client = new Twilio(accountSid, authToken);
+        console.log('✅ Twilio Client Initialized');
+    } else {
+        console.warn('⚠️ Twilio SID/Token missing. Async replies will fail.');
+    }
+} catch (error) {
+    console.error('❌ Twilio Init Error:', error);
+}
+
 app.get('/', (_req, res) => {
     res.send('PaDen Backend API is running!');
 });
 
-// ─── WhatsApp Webhook (Two-Step AI Pipeline) ─────────────
+// ─── AI Suggest Endpoint (for Add Property Wizard) ─────────────
+app.post('/api/ai-suggest', async (req, res) => {
+    try {
+        const { field, context } = req.body;
+
+        const prompts: Record<string, string> = {
+            description: `Generate a compelling, professional property listing description for a rental property.
+Title: "${context.title || 'Untitled'}"
+Location: "${context.location || 'Not specified'}"
+Price: "${context.price || 'Not specified'}"
+Keep it 2-3 sentences max. Be descriptive and appealing. Include key selling points. Do NOT use markdown.`,
+
+            amenities: `Suggest 8-10 relevant amenities for this rental property as a comma-separated list.
+Title: "${context.title || 'Untitled'}"
+Description: "${context.description || 'Not specified'}"
+Location: "${context.location || 'Not specified'}"
+Only output the comma-separated list, nothing else. Example: WiFi, Parking, Security, Solar Power`,
+
+            location_tips: `Give a brief 1-2 sentence tip about renting in "${context.location || 'this area'}".
+Mention average rent ranges and what makes the area attractive. Keep it concise and helpful.`,
+
+            title: `Suggest a catchy, professional property listing title.
+Description: "${context.description || 'Not specified'}"
+Location: "${context.location || 'Not specified'}"
+Price: "${context.price || 'Not specified'}"
+Output ONLY the title, nothing else. Keep it under 60 characters.`,
+        };
+
+        const prompt = prompts[field] || `Generate a helpful suggestion for the "${field}" field of a property listing. Context: ${JSON.stringify(context)}`;
+
+        const { generateSimpleResponse } = await import('./lib/ai');
+        const suggestion = await generateSimpleResponse(prompt, 'You are a professional real estate listing assistant. Be concise and professional.');
+
+        res.json({ suggestion });
+    } catch (error) {
+        console.error('AI Suggest error:', error);
+        res.status(500).json({ error: 'AI suggestion failed' });
+    }
+});
+
+
+// ─── WhatsApp Webhook (Async Pipeline) ─────────────
 
 app.post('/api/whatsapp', async (req, res) => {
     const { Body, From } = req.body;
@@ -25,129 +84,144 @@ app.post('/api/whatsapp', async (req, res) => {
     console.log(`\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`);
     console.log(`📩 Message from ${From}: "${Body}"`);
 
-    const twiml = new MessagingResponse();
+    // 0. Debug Ping/Pic (Sync Fast-Path)
+    if (typeof Body === 'string') {
+        const cmd = Body.toLowerCase().trim();
+        const twiml = new MessagingResponse();
 
-    try {
-        // 0. Debug Ping
-        if (typeof Body === 'string' && Body.toLowerCase().trim() === 'ping') {
-            twiml.message('🏓 Pong! Server is online.');
-            const xml = twiml.toString();
-            res.type('text/xml').send(xml);
+        if (cmd === 'ping') {
+            twiml.message('🏓 Pong! Async Mode Enabled.');
+            res.type('text/xml').send(twiml.toString());
             console.log(`⚡ Ping replied in ${Date.now() - start}ms`);
-            console.log(`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`);
             return;
         }
-
-        // 0b. Debug Media
-        if (typeof Body === 'string' && Body.toLowerCase().trim() === 'pic') {
-            const msg = twiml.message('📸 Here is a test image!');
-            msg.media('https://images.unsplash.com/photo-1564013799919-ab600027ffc6'); // Public stable image
-            const xml = twiml.toString();
-            res.type('text/xml').send(xml);
+        if (cmd === 'pic') {
+            const msg = twiml.message('📸 Testing Media...');
+            msg.media('https://images.unsplash.com/photo-1564013799919-ab600027ffc6');
+            res.type('text/xml').send(twiml.toString());
             console.log(`⚡ Pic replied in ${Date.now() - start}ms`);
-            console.log(`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`);
             return;
         }
-
-        // ── Step 1: Parse user intent ──
-        console.log('🧠 Step 1: Parsing intent...');
-        const intent = await parseUserIntent(Body);
-
-        let reply: string = '';
-        let properties: Property[] = [];
-
-        switch (intent.intent) {
-            case 'search': {
-                // ── Step 2a: Query the database ──
-                console.log('🔍 Step 2: Querying database...');
-                properties = await searchProperties({
-                    location: intent.location,
-                    maxPrice: intent.maxPrice,
-                    minPrice: intent.minPrice,
-                    query: intent.query,
-                    title: intent.title,
-                });
-
-                // ── Step 2b: Fallback (Smart Retry) ──
-                if (properties.length === 0 && (intent.title || intent.query)) {
-                    console.log('⚠️ No exact match, retrying with broader search...');
-                    properties = await searchProperties({
-                        query: intent.title || intent.query,
-                        limit: 3
-                    });
-                }
-
-                // ── Step 2c: Format results ──
-                if (properties.length === 0) {
-                    const filterHints = [
-                        intent.location ? `📍 ${intent.location}` : null,
-                        intent.maxPrice ? `💰 under $${intent.maxPrice}` : null,
-                        intent.query ? `🔎 ${intent.query}` : null,
-                        intent.title ? `🏷️ ${intent.title}` : null,
-                    ].filter(Boolean).join(', ');
-
-                    reply = `😔 No properties found${filterHints ? ` matching: ${filterHints}` : ''}.\n\n` +
-                        `💡 Try:\n` +
-                        `• Broadening your search\n` +
-                        `• "Rooms in Harare"\n` +
-                        `• "Cottage under $200"`;
-                } else {
-                    console.log('✍️ Step 3: Formatting response...');
-                    reply = await formatSearchResults(Body, properties, intent);
-                }
-                break;
-            }
-
-            case 'greeting': {
-                reply = await generateSimpleResponse(Body,
-                    `You are PaDen 🏠, a friendly WhatsApp rental assistant for Zimbabwe.
-                    The user just greeted you. Respond warmly and briefly explain what you can do.
-                    Keep it under 300 characters. Use emojis.`
-                );
-                break;
-            }
-
-            case 'help': {
-                reply = await generateSimpleResponse(Body,
-                    `You are PaDen 🏠. Help user. Examples: "rooms under $80", "cottage in Avondale". Keep it short.`
-                );
-                break;
-            }
-
-            default: {
-                reply = await generateSimpleResponse(Body,
-                    `You are PaDen 🏠. Redirect to rentals. Example: "Try 'rooms near town'". Keep it short.`
-                );
-                break;
-            }
-        }
-
-        console.log(`📤 Generated Reply (${reply.length} chars)`);
-        const msg = twiml.message(reply);
-
-        if (intent.showImages &&
-            properties?.length > 0 &&
-            properties[0].images &&
-            properties[0].images.length > 0) {
-
-            const imageUrl = properties[0].images[0];
-            console.log(`🖼️ Attaching image: ${imageUrl}`);
-            msg.media(imageUrl);
-        }
-
-    } catch (error) {
-        console.error('❌ Pipeline error:', error);
-        twiml.message("😔 something went wrong. Try again!");
     }
 
-    const xml = twiml.toString();
-    console.log(`📦 Sending TwiML (Len: ${xml.length}): ${xml.substring(0, 100)}...`);
-    res.type('text/xml').send(xml);
-    console.log(`⏱️ Total Processing Time: ${Date.now() - start}ms`);
-    console.log(`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`);
+    // ── 1. Acknowledge Receipt Immediately ──
+    // Send 200 OK with empty body so Twilio knows we got it.
+    // We will send the actual reply via API.
+    res.status(200).send();
+    console.log('⚡ Sent 200 OK to Twilio (Async processing started)');
+
+    // ── 2. Async Processing ──
+    (async () => {
+        try {
+            if (!client) {
+                console.error('❌ Cannot reply: Twilio Client not active');
+                return;
+            }
+
+            console.log('🧠 Step 1: Parsing intent...');
+            const intent = await parseUserIntent(Body);
+
+            let reply: string = '';
+            let properties: Property[] = [];
+            let mediaUrl: string | undefined;
+
+            switch (intent.intent) {
+                case 'search': {
+                    console.log('🔍 Step 2: Querying database...');
+                    properties = await searchProperties({
+                        location: intent.location,
+                        maxPrice: intent.maxPrice,
+                        minPrice: intent.minPrice,
+                        query: intent.query,
+                        title: intent.title,
+                    });
+
+                    // Fallback
+                    if (properties.length === 0 && (intent.title || intent.query)) {
+                        console.log('⚠️ No exact match, retrying with broader search...');
+                        properties = await searchProperties({
+                            query: intent.title || intent.query,
+                            limit: 3
+                        });
+                    }
+
+                    if (properties.length === 0) {
+                        const filterHints = [
+                            intent.location ? `📍 ${intent.location}` : null,
+                            intent.maxPrice ? `💰 under $${intent.maxPrice}` : null,
+                            intent.query ? `🔎 ${intent.query}` : null,
+                            intent.title ? `🏷️ ${intent.title}` : null,
+                        ].filter(Boolean).join(', ');
+
+                        reply = `😔 No properties found${filterHints ? ` matching: ${filterHints}` : ''}.\n\n` +
+                            `💡 Try broadening your search.`;
+                    } else {
+                        console.log('✍️ Step 3: Formatting response...');
+                        reply = await formatSearchResults(Body, properties, intent);
+                    }
+                    break;
+                }
+
+                case 'greeting': {
+                    reply = await generateSimpleResponse(Body,
+                        `You are PaDen 🏠. Friendly greeting + capabilities (search rentals). Keep it short.`
+                    );
+                    break;
+                }
+
+                case 'help': {
+                    reply = await generateSimpleResponse(Body,
+                        `You are PaDen 🏠. Explain how to search (e.g. "rooms under $80"). Keep it short.`
+                    );
+                    break;
+                }
+
+                default: {
+                    reply = await generateSimpleResponse(Body,
+                        `You are PaDen 🏠. Redirect to rentals. Example: "rooms in Harare".`
+                    );
+                    break;
+                }
+            }
+
+            // Image Logic
+            if (intent.showImages &&
+                properties?.length > 0 &&
+                properties[0].images?.length > 0) {
+                mediaUrl = properties[0].images[0];
+                console.log(`🖼️ Attaching image: ${mediaUrl}`);
+            }
+
+            console.log(`📤 Sending Async Reply via Twilio API...`);
+
+            await client.messages.create({
+                from: twilioNumber,
+                to: From,
+                body: reply,
+                mediaUrl: mediaUrl ? [mediaUrl] : undefined
+            });
+
+            console.log(`✅ Message Sent! (Time: ${Date.now() - start}ms)`);
+
+        } catch (error) {
+            console.error('❌ Async Pipeline Error:', error);
+            // Optional: Send error notification to user
+            if (client) {
+                try {
+                    await client.messages.create({
+                        from: twilioNumber,
+                        to: From,
+                        body: "😔 System is busy. Please try again."
+                    });
+                } catch (e) { console.error('Error notification failed', e); }
+            }
+        }
+    })();
 });
 
 app.listen(port, () => {
     console.log(`\n🚀 PaDen server running at http://localhost:${port}`);
-    console.log(`📡 WhatsApp webhook: POST /api/whatsapp\n`);
+    console.log(`📡 WhatsApp webhook: POST /api/whatsapp (Async Mode)\n`);
 });
+
+// Force restart for env update
