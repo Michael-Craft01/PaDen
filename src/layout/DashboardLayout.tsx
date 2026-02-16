@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { NotificationPanel } from '../components/NotificationPanel';
 import {
     LayoutDashboard,
     Home,
@@ -10,7 +11,6 @@ import {
     ChevronRight,
     Menu,
     X,
-    Bell,
     Settings,
     Sparkles,
     Bot,
@@ -274,23 +274,20 @@ export const DashboardLayout = ({ children }: { children: React.ReactNode }) => 
                 collapsed ? "lg:ml-[72px]" : "lg:ml-[260px]"
             )}>
                 {/* Top Bar (Glassmorphic) */}
-                <header className="sticky top-0 z-30 h-16 glass-header flex items-center justify-between px-4 sm:px-6 lg:px-8">
-                    <div className="flex items-center gap-4">
+                <header className="sticky top-0 z-30 h-14 sm:h-16 glass-header flex items-center justify-between px-3 sm:px-6 lg:px-8">
+                    <div className="flex items-center gap-3">
                         <button
                             onClick={() => setMobileOpen(true)}
-                            className="lg:hidden p-2 text-zinc-400 hover:text-white hover:bg-white/[0.04] rounded-lg transition-colors"
+                            className="lg:hidden p-2.5 text-zinc-400 hover:text-white hover:bg-white/[0.04] rounded-xl transition-colors active:scale-95"
                         >
                             <Menu size={20} />
                         </button>
                         <div>
-                            <h2 className="text-lg font-semibold text-white">{pageTitle}</h2>
+                            <h2 className="text-base sm:text-lg font-semibold text-white" style={{ fontFamily: "'Outfit', sans-serif" }}>{pageTitle}</h2>
                         </div>
                     </div>
-                    <div className="flex items-center gap-3">
-                        <button className="relative p-2 text-zinc-500 hover:text-white hover:bg-white/[0.04] rounded-lg transition-colors">
-                            <Bell size={18} />
-                            <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-purple-500 rounded-full" />
-                        </button>
+                    <div className="flex items-center gap-2 sm:gap-3">
+                        <NotificationPanel />
                         <div className="hidden sm:flex w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-violet-600 items-center justify-center text-white text-xs font-bold shadow-md shadow-purple-900/30">
                             {userInitial}
                         </div>
@@ -298,9 +295,35 @@ export const DashboardLayout = ({ children }: { children: React.ReactNode }) => 
                 </header>
 
                 {/* Page Content */}
-                <main className="flex-1 py-6 px-4 sm:px-6 lg:px-8 max-w-7xl w-full mx-auto">
+                <main className="flex-1 py-4 sm:py-6 px-3 sm:px-6 lg:px-8 pb-20 lg:pb-6 max-w-7xl w-full mx-auto">
                     {children}
                 </main>
+
+                {/* ─── Mobile Bottom Nav ─── */}
+                <nav className="fixed bottom-0 left-0 right-0 z-40 lg:hidden flex items-center justify-around h-16 safe-area-bottom" style={{
+                    background: 'rgba(9, 9, 11, 0.9)',
+                    backdropFilter: 'blur(24px)',
+                    WebkitBackdropFilter: 'blur(24px)',
+                    borderTop: '1px solid rgba(63, 63, 70, 0.2)',
+                }}>
+                    {navItems.map((item) => {
+                        const Icon = item.icon;
+                        const isActive = location.pathname === item.path;
+                        return (
+                            <Link
+                                key={item.path}
+                                to={item.path}
+                                className={clsx(
+                                    "flex flex-col items-center justify-center gap-1 w-16 h-full transition-all active:scale-90",
+                                    isActive ? "text-purple-400" : "text-zinc-600"
+                                )}
+                            >
+                                <Icon size={20} />
+                                <span className="text-[10px] font-medium">{item.label.split(' ')[0]}</span>
+                            </Link>
+                        );
+                    })}
+                </nav>
             </div>
         </div>
     );
