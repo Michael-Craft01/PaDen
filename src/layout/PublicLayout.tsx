@@ -40,7 +40,7 @@ export const PublicLayout = ({ children }: { children: React.ReactNode }) => {
                                 </div>
                             </div>
                             <span className="font-bold text-xl tracking-tight text-white group-hover:text-purple-400 transition-colors">
-                                PaDen
+                                SafeStay
                             </span>
                         </div>
 
@@ -120,7 +120,7 @@ export const PublicLayout = ({ children }: { children: React.ReactNode }) => {
             <footer className="bg-zinc-950 border-t border-zinc-900 mt-20 py-12">
                 <div className="max-w-7xl mx-auto px-4 text-center">
                     <p className="text-gray-500 text-sm">
-                        &copy; {new Date().getFullYear()} PaDen. <span className="text-zinc-700 mx-2">|</span> Classic Reliability. Modern Tech.
+                        &copy; {new Date().getFullYear()} SafeStay. <span className="text-zinc-700 mx-2">|</span> Classic Reliability. Modern Tech.
                     </p>
                 </div>
             </footer>

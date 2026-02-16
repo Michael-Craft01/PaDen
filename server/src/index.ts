@@ -31,7 +31,7 @@ try {
 }
 
 app.get('/', (_req, res) => {
-    res.send('PaDen Backend API is running!');
+    res.send('SafeStay Backend API is running!');
 });
 
 // ─── AI Suggest Endpoint (for Add Property Wizard) ─────────────
@@ -39,34 +39,62 @@ app.post('/api/ai-suggest', async (req, res) => {
     try {
         const { field, context } = req.body;
 
+        // Random style hint so responses differ each call
+        const styles = [
+            'Use a warm, inviting tone.',
+            'Be modern and professional.',
+            'Focus on lifestyle benefits.',
+            'Highlight convenience and comfort.',
+            'Emphasize value for money.',
+            'Use a premium luxury tone.',
+            'Be concise but vivid.',
+            'Highlight safety and community.',
+        ];
+        const styleHint = styles[Math.floor(Math.random() * styles.length)];
+
         const prompts: Record<string, string> = {
-            description: `Generate a compelling, professional property listing description for a rental property.
+            description: `Generate a compelling property listing description for a rental.
 Title: "${context.title || 'Untitled'}"
 Location: "${context.location || 'Not specified'}"
 Price: "${context.price || 'Not specified'}"
-Keep it 2-3 sentences max. Be descriptive and appealing. Include key selling points. Do NOT use markdown.`,
+Style: ${styleHint}
+Keep it 2-3 sentences max. Be creative and unique every time. Do NOT use markdown.`,
 
             amenities: `Suggest 8-10 relevant amenities for this rental property as a comma-separated list.
 Title: "${context.title || 'Untitled'}"
 Description: "${context.description || 'Not specified'}"
 Location: "${context.location || 'Not specified'}"
-Only output the comma-separated list, nothing else. Example: WiFi, Parking, Security, Solar Power`,
+Be creative — vary your suggestions each time. Only output the comma-separated list, nothing else.`,
 
             location_tips: `Give a brief 1-2 sentence tip about renting in "${context.location || 'this area'}".
-Mention average rent ranges and what makes the area attractive. Keep it concise and helpful.`,
+${styleHint}
+Be creative and different from typical responses. Mention unique aspects.`,
 
-            title: `Suggest a catchy, professional property listing title.
+            title: `Suggest a catchy property listing title.
 Description: "${context.description || 'Not specified'}"
 Location: "${context.location || 'Not specified'}"
 Price: "${context.price || 'Not specified'}"
-Output ONLY the title, nothing else. Keep it under 60 characters.`,
+${styleHint}
+Output ONLY the title, nothing else. Keep it under 60 characters. Be creative and unique.`,
         };
 
-        const prompt = prompts[field] || `Generate a helpful suggestion for the "${field}" field of a property listing. Context: ${JSON.stringify(context)}`;
+        const prompt = prompts[field] || `Generate a helpful suggestion for the "${field}" field of a property listing. Context: ${JSON.stringify(context)}. ${styleHint}`;
 
-        const { generateSimpleResponse } = await import('./lib/ai');
-        const suggestion = await generateSimpleResponse(prompt, 'You are a professional real estate listing assistant. Be concise and professional.');
+        // Use the AI model directly with high temperature for variety
+        const { model } = await import('./lib/ai');
+        const result = await model.generateContent({
+            contents: [
+                { role: 'user', parts: [{ text: `You are SafeStay's professional real estate assistant. Be concise.\n\n${prompt}` }] }
+            ],
+            generationConfig: {
+                maxOutputTokens: 300,
+                temperature: 0.95,
+                topP: 0.95,
+                topK: 40,
+            }
+        });
 
+        const suggestion = result.response.text().trim();
         res.json({ suggestion });
     } catch (error) {
         console.error('AI Suggest error:', error);
@@ -164,21 +192,21 @@ app.post('/api/whatsapp', async (req, res) => {
 
                 case 'greeting': {
                     reply = await generateSimpleResponse(Body,
-                        `You are PaDen 🏠. Friendly greeting + capabilities (search rentals). Keep it short.`
+                        `You are SafeStay 🏠. Friendly greeting + capabilities (search rentals). Keep it short.`
                     );
                     break;
                 }
 
                 case 'help': {
                     reply = await generateSimpleResponse(Body,
-                        `You are PaDen 🏠. Explain how to search (e.g. "rooms under $80"). Keep it short.`
+                        `You are SafeStay 🏠. Explain how to search (e.g. "rooms under $80"). Keep it short.`
                     );
                     break;
                 }
 
                 default: {
                     reply = await generateSimpleResponse(Body,
-                        `You are PaDen 🏠. Redirect to rentals. Example: "rooms in Harare".`
+                        `You are SafeStay 🏠. Redirect to rentals. Example: "rooms in Harare".`
                     );
                     break;
                 }
@@ -220,7 +248,7 @@ app.post('/api/whatsapp', async (req, res) => {
 });
 
 app.listen(port, () => {
-    console.log(`\n🚀 PaDen server running at http://localhost:${port}`);
+    console.log(`\n🚀 SafeStay server running at http://localhost:${port}`);
     console.log(`📡 WhatsApp webhook: POST /api/whatsapp (Async Mode)\n`);
 });
 

@@ -5,7 +5,6 @@ import { supabase } from '../lib/supabase';
 import { useAuth } from '../context/AuthContext';
 import { AISuggest } from '../components/AISuggest';
 import {
-  Upload,
   X,
   ChevronRight,
   ChevronLeft,
@@ -15,7 +14,6 @@ import {
   MapPin,
   DollarSign,
   FileText,
-  Sparkles,
   Tag,
 } from 'lucide-react';
 import { clsx } from 'clsx';
@@ -520,7 +518,7 @@ export default function AddProperty() {
               <button
                 onClick={handleSubmit}
                 disabled={loading}
-                className="flex items-center gap-2 px-8 py-2.5 bg-emerald-600 text-white rounded-xl hover:bg-emerald-500 transition-all shadow-lg shadow-emerald-900/30 font-medium disabled:opacity-50"
+                className="flex items-center gap-2 px-8 py-2.5 bg-purple-600 text-white rounded-xl hover:bg-purple-500 transition-all shadow-lg shadow-purple-900/30 font-medium disabled:opacity-50"
               >
                 {loading ? (
                   <>

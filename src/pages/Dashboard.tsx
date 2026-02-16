@@ -46,7 +46,6 @@ export default function Dashboard() {
 
     const fetchDashboardData = async () => {
         try {
-            // Fetch properties
             const { data: properties, error } = await supabase
                 .from('properties')
                 .select('*')
@@ -88,43 +87,43 @@ export default function Dashboard() {
             value: stats.activeListings,
             icon: Building2,
             trend: '+2 this month',
-            gradient: 'from-purple-500 to-violet-600',
             bg: 'bg-purple-500/10',
             border: 'border-purple-500/20',
+            iconColor: 'text-purple-400',
         },
         {
             label: 'Total Views',
             value: stats.totalViews,
             icon: Eye,
             trend: '+12% vs last week',
-            gradient: 'from-blue-500 to-cyan-500',
-            bg: 'bg-blue-500/10',
-            border: 'border-blue-500/20',
+            bg: 'bg-purple-500/8',
+            border: 'border-purple-500/15',
+            iconColor: 'text-purple-300',
         },
         {
             label: 'WhatsApp Inquiries',
             value: stats.inquiries,
             icon: MessageSquare,
             trend: '3 unread',
-            gradient: 'from-emerald-500 to-teal-500',
-            bg: 'bg-emerald-500/10',
-            border: 'border-emerald-500/20',
+            bg: 'bg-violet-500/10',
+            border: 'border-violet-500/20',
+            iconColor: 'text-violet-400',
         },
         {
             label: 'Monthly Revenue',
             value: `$${stats.revenue.toLocaleString()}`,
             icon: TrendingUp,
             trend: 'Projected',
-            gradient: 'from-amber-500 to-orange-500',
-            bg: 'bg-amber-500/10',
-            border: 'border-amber-500/20',
+            bg: 'bg-purple-600/10',
+            border: 'border-purple-600/20',
+            iconColor: 'text-purple-300',
         },
     ];
 
     const quickActions = [
         { label: 'Add Property', icon: PlusCircle, path: '/add-property', color: 'text-purple-400 hover:bg-purple-600/10' },
         { label: 'AI Assistant', icon: Sparkles, path: '/dashboard', color: 'text-violet-400 hover:bg-violet-600/10' },
-        { label: 'View All', icon: Building2, path: '/properties', color: 'text-blue-400 hover:bg-blue-600/10' },
+        { label: 'View All', icon: Building2, path: '/properties', color: 'text-purple-300 hover:bg-purple-600/10' },
     ];
 
     return (
@@ -163,15 +162,15 @@ export default function Dashboard() {
                             <div
                                 key={index}
                                 className={clsx(
-                                    "group relative rounded-2xl border p-5 transition-all duration-300",
-                                    "bg-zinc-900/50 backdrop-blur-sm hover:bg-zinc-900/70",
+                                    "group relative rounded-2xl p-5 transition-all duration-300",
+                                    "glass-card hover:bg-white/[0.04]",
                                     stat.border,
                                     "hover:shadow-lg hover:shadow-purple-900/5 hover:-translate-y-0.5"
                                 )}
                             >
                                 <div className="flex items-start justify-between mb-3">
                                     <div className={clsx("p-2.5 rounded-xl", stat.bg)}>
-                                        <Icon size={20} className={`bg-gradient-to-br ${stat.gradient} bg-clip-text`} style={{ color: 'currentColor' }} />
+                                        <Icon size={20} className={stat.iconColor} />
                                     </div>
                                     <span className="text-[10px] font-medium text-zinc-500 bg-zinc-800/80 px-2 py-0.5 rounded-full">
                                         {stat.trend}
@@ -193,7 +192,7 @@ export default function Dashboard() {
                 {/* ─── Main Grid ─── */}
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     {/* Recent Properties */}
-                    <div className="lg:col-span-2 bg-zinc-900/50 backdrop-blur-sm rounded-2xl border border-zinc-800 overflow-hidden">
+                    <div className="lg:col-span-2 glass-card rounded-2xl overflow-hidden">
                         <div className="flex items-center justify-between p-5 border-b border-zinc-800/60">
                             <h3 className="text-base font-semibold text-white flex items-center gap-2">
                                 <Building2 size={16} className="text-purple-500" />
@@ -258,7 +257,7 @@ export default function Dashboard() {
                                         <span className={clsx(
                                             "text-[10px] font-medium px-2 py-0.5 rounded-full",
                                             property.status === 'active'
-                                                ? "bg-emerald-900/30 text-emerald-400 border border-emerald-500/20"
+                                                ? "bg-purple-900/30 text-purple-400 border border-purple-500/20"
                                                 : "bg-zinc-800 text-zinc-500 border border-zinc-700"
                                         )}>
                                             {property.status}
@@ -272,7 +271,7 @@ export default function Dashboard() {
                     {/* Right Column */}
                     <div className="space-y-6">
                         {/* Quick Actions */}
-                        <div className="bg-zinc-900/50 backdrop-blur-sm rounded-2xl border border-zinc-800 p-5">
+                        <div className="glass-card rounded-2xl p-5">
                             <h3 className="text-base font-semibold text-white mb-4">Quick Actions</h3>
                             <div className="space-y-2">
                                 {quickActions.map((action) => {
@@ -320,12 +319,12 @@ export default function Dashboard() {
                         {/* WhatsApp Status */}
                         <div className="bg-zinc-900/50 backdrop-blur-sm rounded-2xl border border-zinc-800 p-5">
                             <div className="flex items-center gap-2 mb-3">
-                                <MessageSquare size={16} className="text-emerald-500" />
+                                <MessageSquare size={16} className="text-purple-500" />
                                 <h3 className="text-sm font-semibold text-white">WhatsApp Bot</h3>
                             </div>
                             <div className="flex items-center gap-2 mb-2">
-                                <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
-                                <span className="text-xs text-emerald-400 font-medium">Online</span>
+                                <div className="w-2 h-2 bg-purple-500 rounded-full animate-pulse" />
+                                <span className="text-xs text-purple-400 font-medium">Online</span>
                             </div>
                             <p className="text-xs text-zinc-500">
                                 Your AI bot is ready to respond to tenant inquiries on WhatsApp automatically.

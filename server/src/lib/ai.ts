@@ -10,7 +10,7 @@ if (!apiKey) {
 
 // Initialize Google AI
 const genAI = new GoogleGenerativeAI(apiKey || 'dummy-key');
-const model = genAI.getGenerativeModel({ model: "gemma-3-27b-it" });
+export const model = genAI.getGenerativeModel({ model: "gemma-3-27b-it" });
 
 // ─── Types ──────────────────────────────────────────────
 
@@ -31,7 +31,7 @@ export interface ParsedIntent {
  * Uses Gemma to parse a user's WhatsApp message into structured search filters.
  */
 export async function parseUserIntent(userMessage: string): Promise<ParsedIntent> {
-    const prompt = `You are PaDen's intent parser. Your ONLY job is to analyze the user's message and extract search filters as JSON.
+    const prompt = `You are SafeStay's intent parser. Your ONLY job is to analyze the user's message and extract search filters as JSON.
 
 RULES:
 - Respond with ONLY valid JSON, no extra text.
@@ -103,7 +103,7 @@ export async function formatSearchResults(
    Description: ${p.description || 'No description'}`;
     }).join('\n\n');
 
-    const prompt = `You are PaDen 🏠, a friendly and helpful WhatsApp rental assistant for Zimbabwe.
+    const prompt = `You are SafeStay 🏠, a friendly and helpful WhatsApp rental assistant for Zimbabwe.
 
 The user asked: "${userMessage}"
 

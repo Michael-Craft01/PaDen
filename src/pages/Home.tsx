@@ -21,7 +21,7 @@ export default function Home() {
                             </span>
                         </h1>
                         <p className="mt-4 max-w-md mx-auto text-base text-gray-400 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
-                            PaDen connects you directly with verified students and professionals looking for accommodation.
+                            SafeStay connects you directly with verified students and professionals looking for accommodation.
                             Classic reliability, modern technology.
                         </p>
                         <div className="mt-8 max-w-md mx-auto sm:flex sm:justify-center md:mt-12 gap-4">

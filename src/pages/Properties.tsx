@@ -183,7 +183,7 @@ export default function Properties() {
                                     <span className={clsx(
                                         "absolute top-3 right-3 px-2.5 py-0.5 rounded-full text-[10px] font-semibold border backdrop-blur-md",
                                         property.status === 'active'
-                                            ? 'bg-emerald-900/40 text-emerald-300 border-emerald-500/30'
+                                            ? 'bg-purple-900/40 text-purple-300 border-purple-500/30'
                                             : 'bg-zinc-800/80 text-zinc-400 border-zinc-700'
                                     )}>
                                         {property.status}
@@ -253,7 +253,7 @@ export default function Properties() {
                                 <span className={clsx(
                                     "hidden sm:inline-flex text-[10px] font-medium px-2 py-0.5 rounded-full",
                                     property.status === 'active'
-                                        ? "bg-emerald-900/30 text-emerald-400 border border-emerald-500/20"
+                                        ? "bg-purple-900/30 text-purple-400 border border-purple-500/20"
                                         : "bg-zinc-800 text-zinc-500 border border-zinc-700"
                                 )}>
                                     {property.status}
