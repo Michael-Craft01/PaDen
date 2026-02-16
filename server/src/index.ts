@@ -31,7 +31,7 @@ try {
 }
 
 app.get('/', (_req, res) => {
-    res.send('SafeStay Backend API is running!');
+    res.send('Homify Backend API is running!');
 });
 
 // ─── AI Suggest Endpoint (for Add Property Wizard) ─────────────
@@ -84,7 +84,7 @@ Output ONLY the title, nothing else. Keep it under 60 characters. Be creative an
         const { model } = await import('./lib/ai');
         const result = await model.generateContent({
             contents: [
-                { role: 'user', parts: [{ text: `You are SafeStay's professional real estate assistant. Be concise.\n\n${prompt}` }] }
+                { role: 'user', parts: [{ text: `You are Homify's professional real estate assistant. Be concise.\n\n${prompt}` }] }
             ],
             generationConfig: {
                 maxOutputTokens: 300,
@@ -192,21 +192,21 @@ app.post('/api/whatsapp', async (req, res) => {
 
                 case 'greeting': {
                     reply = await generateSimpleResponse(Body,
-                        `You are SafeStay 🏠. Friendly greeting + capabilities (search rentals). Keep it short.`
+                        `You are Homify 🏠. Friendly greeting + capabilities (search rentals). Keep it short.`
                     );
                     break;
                 }
 
                 case 'help': {
                     reply = await generateSimpleResponse(Body,
-                        `You are SafeStay 🏠. Explain how to search (e.g. "rooms under $80"). Keep it short.`
+                        `You are Homify 🏠. Explain how to search (e.g. "rooms under $80"). Keep it short.`
                     );
                     break;
                 }
 
                 default: {
                     reply = await generateSimpleResponse(Body,
-                        `You are SafeStay 🏠. Redirect to rentals. Example: "rooms in Harare".`
+                        `You are Homify 🏠. Redirect to rentals. Example: "rooms in Harare".`
                     );
                     break;
                 }
@@ -248,7 +248,7 @@ app.post('/api/whatsapp', async (req, res) => {
 });
 
 app.listen(port, () => {
-    console.log(`\n🚀 SafeStay server running at http://localhost:${port}`);
+    console.log(`\n🚀 Homify server running at http://localhost:${port}`);
     console.log(`📡 WhatsApp webhook: POST /api/whatsapp (Async Mode)\n`);
 });
 

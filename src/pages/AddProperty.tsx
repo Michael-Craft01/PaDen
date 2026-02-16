@@ -199,10 +199,10 @@ export default function AddProperty() {
       <div className="max-w-3xl mx-auto animate-fade-in">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight" style={{ fontFamily: "'Outfit', sans-serif" }}>
             {isEditing ? 'Edit Property' : 'List New Property'}
           </h1>
-          <p className="text-zinc-400 mt-1 text-sm">
+          <p className="text-zinc-500 mt-1 text-sm">
             {isEditing ? 'Update your listing details.' : 'AI-powered wizard to create the perfect listing.'}
           </p>
         </div>
@@ -243,7 +243,11 @@ export default function AddProperty() {
         </div>
 
         {/* ─── Form Card ─── */}
-        <div className="bg-zinc-900/50 backdrop-blur-sm border border-zinc-800 rounded-2xl shadow-xl overflow-hidden min-h-[420px] flex flex-col">
+        <div className="rounded-2xl shadow-xl overflow-hidden min-h-[420px] flex flex-col" style={{
+          background: 'rgba(24, 24, 27, 0.45)',
+          backdropFilter: 'blur(20px)',
+          border: '1px solid rgba(63, 63, 70, 0.3)',
+        }}>
           <div className="p-6 sm:p-8 flex-1">
             {/* Step 1: Basic Details */}
             {currentStep === 1 && (
@@ -266,7 +270,8 @@ export default function AddProperty() {
                   </div>
                   <input
                     type="text"
-                    className="w-full px-4 py-3 bg-zinc-800/80 border border-zinc-700/60 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-600/50 focus:border-purple-500/50 text-white placeholder-zinc-500 transition-all"
+                    className="w-full px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-600/40 text-white placeholder-zinc-600 transition-all"
+                    style={{ background: 'rgba(24, 24, 27, 0.6)', border: '1px solid rgba(63, 63, 70, 0.3)' }}
                     placeholder="e.g. Modern Apartment in City Center"
                     value={formData.title}
                     onChange={e => setFormData({ ...formData, title: e.target.value })}
@@ -285,7 +290,8 @@ export default function AddProperty() {
                   </div>
                   <textarea
                     rows={4}
-                    className="w-full px-4 py-3 bg-zinc-800/80 border border-zinc-700/60 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-600/50 focus:border-purple-500/50 text-white placeholder-zinc-500 resize-none transition-all"
+                    className="w-full px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-600/40 text-white placeholder-zinc-600 resize-none transition-all"
+                    style={{ background: 'rgba(24, 24, 27, 0.6)', border: '1px solid rgba(63, 63, 70, 0.3)' }}
                     placeholder="Describe your property — or let AI write it for you..."
                     value={formData.description}
                     onChange={e => setFormData({ ...formData, description: e.target.value })}
@@ -298,7 +304,8 @@ export default function AddProperty() {
                     <DollarSign size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-500" />
                     <input
                       type="number"
-                      className="w-full pl-9 pr-4 py-3 bg-zinc-800/80 border border-zinc-700/60 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-600/50 focus:border-purple-500/50 text-white placeholder-zinc-500 transition-all"
+                      className="w-full pl-9 pr-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-600/40 text-white placeholder-zinc-600 transition-all"
+                      style={{ background: 'rgba(24, 24, 27, 0.6)', border: '1px solid rgba(63, 63, 70, 0.3)' }}
                       placeholder="0.00"
                       value={formData.price}
                       onChange={e => setFormData({ ...formData, price: e.target.value })}
@@ -330,7 +337,8 @@ export default function AddProperty() {
                     <MapPin size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-500" />
                     <input
                       type="text"
-                      className="w-full pl-9 pr-4 py-3 bg-zinc-800/80 border border-zinc-700/60 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-600/50 focus:border-purple-500/50 text-white placeholder-zinc-500 transition-all"
+                      className="w-full pl-9 pr-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-600/40 text-white placeholder-zinc-600 transition-all"
+                      style={{ background: 'rgba(24, 24, 27, 0.6)', border: '1px solid rgba(63, 63, 70, 0.3)' }}
                       placeholder="e.g. Harare, Avondale"
                       value={formData.location}
                       onChange={e => setFormData({ ...formData, location: e.target.value })}
@@ -342,7 +350,8 @@ export default function AddProperty() {
                   <label className="block text-sm font-medium text-zinc-400 mb-1.5">Full Address (Optional)</label>
                   <input
                     type="text"
-                    className="w-full px-4 py-3 bg-zinc-800/80 border border-zinc-700/60 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-600/50 focus:border-purple-500/50 text-white placeholder-zinc-500 transition-all"
+                    className="w-full px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-600/40 text-white placeholder-zinc-600 transition-all"
+                    style={{ background: 'rgba(24, 24, 27, 0.6)', border: '1px solid rgba(63, 63, 70, 0.3)' }}
                     placeholder="e.g. 123 Samora Machel Ave"
                     value={formData.address}
                     onChange={e => setFormData({ ...formData, address: e.target.value })}
@@ -493,7 +502,7 @@ export default function AddProperty() {
           </div>
 
           {/* ─── Footer Controls ─── */}
-          <div className="p-5 sm:p-6 bg-zinc-900/80 border-t border-zinc-800/60 flex justify-between items-center">
+          <div className="p-5 sm:p-6 flex justify-between items-center" style={{ background: 'rgba(9, 9, 11, 0.4)', borderTop: '1px solid rgba(63, 63, 70, 0.2)' }}>
             <button
               onClick={prevStep}
               disabled={currentStep === 1}
@@ -510,7 +519,8 @@ export default function AddProperty() {
             {currentStep < 4 ? (
               <button
                 onClick={nextStep}
-                className="flex items-center gap-2 px-6 py-2.5 bg-purple-600 text-white rounded-xl hover:bg-purple-500 transition-all shadow-lg shadow-purple-900/30 font-medium group"
+                className="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-purple-600 to-violet-600 hover:from-purple-500 hover:to-violet-500 text-white rounded-xl transition-all shadow-lg shadow-purple-900/30 font-semibold group"
+                style={{ fontFamily: "'Outfit', sans-serif" }}
               >
                 Next <ChevronRight size={16} className="group-hover:translate-x-0.5 transition-transform" />
               </button>
@@ -518,7 +528,8 @@ export default function AddProperty() {
               <button
                 onClick={handleSubmit}
                 disabled={loading}
-                className="flex items-center gap-2 px-8 py-2.5 bg-purple-600 text-white rounded-xl hover:bg-purple-500 transition-all shadow-lg shadow-purple-900/30 font-medium disabled:opacity-50"
+                className="flex items-center gap-2 px-8 py-2.5 bg-gradient-to-r from-purple-600 to-violet-600 hover:from-purple-500 hover:to-violet-500 text-white rounded-xl transition-all shadow-lg shadow-purple-900/30 font-semibold disabled:opacity-50"
+                style={{ fontFamily: "'Outfit', sans-serif" }}
               >
                 {loading ? (
                   <>

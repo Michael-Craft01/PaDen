@@ -13,6 +13,7 @@ import {
     List,
     Search,
     Building2,
+    ArrowUpRight,
 } from 'lucide-react';
 import { clsx } from 'clsx';
 
@@ -82,16 +83,19 @@ export default function Properties() {
         <DashboardLayout>
             <div className="animate-fade-in">
                 {/* Header */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-7">
                     <div>
-                        <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">My Properties</h1>
-                        <p className="text-zinc-400 mt-0.5 text-sm">
+                        <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight" style={{ fontFamily: "'Outfit', sans-serif" }}>
+                            My Properties
+                        </h1>
+                        <p className="text-zinc-500 mt-1 text-sm">
                             {properties.length} {properties.length === 1 ? 'property' : 'properties'} listed
                         </p>
                     </div>
                     <Link
                         to="/add-property"
-                        className="inline-flex items-center gap-2 px-5 py-2.5 bg-purple-600 text-white rounded-xl hover:bg-purple-500 transition-all shadow-lg shadow-purple-900/40 font-medium group text-sm whitespace-nowrap"
+                        className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-purple-600 to-violet-600 hover:from-purple-500 hover:to-violet-500 text-white rounded-xl transition-all shadow-lg shadow-purple-900/30 font-semibold group text-sm whitespace-nowrap"
+                        style={{ fontFamily: "'Outfit', sans-serif" }}
                     >
                         <Plus size={16} className="group-hover:rotate-90 transition-transform" />
                         Add Property
@@ -105,16 +109,25 @@ export default function Properties() {
                         <input
                             type="text"
                             placeholder="Search properties..."
-                            className="w-full pl-10 pr-4 py-2.5 bg-zinc-900/60 border border-zinc-800 rounded-xl text-sm text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-purple-600/50 focus:border-purple-500/50 transition-all"
+                            className="w-full pl-10 pr-4 py-2.5 rounded-xl text-sm text-white placeholder-zinc-600 focus:outline-none focus:ring-2 focus:ring-purple-600/40 transition-all"
+                            style={{
+                                background: 'rgba(24, 24, 27, 0.5)',
+                                backdropFilter: 'blur(16px)',
+                                border: '1px solid rgba(63, 63, 70, 0.3)',
+                            }}
                             value={searchQuery}
                             onChange={e => setSearchQuery(e.target.value)}
                         />
                     </div>
-                    <div className="flex items-center bg-zinc-900/60 border border-zinc-800 rounded-xl overflow-hidden">
+                    <div className="flex items-center rounded-xl overflow-hidden" style={{
+                        background: 'rgba(24, 24, 27, 0.5)',
+                        backdropFilter: 'blur(16px)',
+                        border: '1px solid rgba(63, 63, 70, 0.3)',
+                    }}>
                         <button
                             onClick={() => setViewMode('grid')}
                             className={clsx(
-                                "p-2.5 transition-colors",
+                                "p-2.5 transition-all",
                                 viewMode === 'grid'
                                     ? "bg-purple-600/20 text-purple-400"
                                     : "text-zinc-500 hover:text-zinc-300"
@@ -125,7 +138,7 @@ export default function Properties() {
                         <button
                             onClick={() => setViewMode('list')}
                             className={clsx(
-                                "p-2.5 transition-colors",
+                                "p-2.5 transition-all",
                                 viewMode === 'list'
                                     ? "bg-purple-600/20 text-purple-400"
                                     : "text-zinc-500 hover:text-zinc-300"
@@ -144,11 +157,15 @@ export default function Properties() {
                         ))}
                     </div>
                 ) : filtered.length === 0 ? (
-                    <div className="text-center py-24 bg-zinc-900/30 rounded-2xl border border-dashed border-zinc-800 backdrop-blur-sm">
-                        <div className="w-16 h-16 bg-zinc-800/50 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                            <Building2 className="text-zinc-600" size={24} />
+                    <div className="text-center py-24 rounded-2xl" style={{
+                        background: 'rgba(24, 24, 27, 0.35)',
+                        backdropFilter: 'blur(16px)',
+                        border: '1px dashed rgba(63, 63, 70, 0.4)',
+                    }}>
+                        <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-500/10 to-violet-500/5 border border-purple-500/10 flex items-center justify-center mx-auto mb-5">
+                            <Building2 className="text-purple-500/50" size={28} />
                         </div>
-                        <h3 className="text-lg font-medium text-white mb-2">
+                        <h3 className="text-lg font-semibold text-white mb-2" style={{ fontFamily: "'Outfit', sans-serif" }}>
                             {searchQuery ? 'No results found' : 'No properties listed'}
                         </h3>
                         <p className="text-zinc-500 mb-6 max-w-sm mx-auto text-sm">
@@ -159,7 +176,7 @@ export default function Properties() {
                         {!searchQuery && (
                             <Link
                                 to="/add-property"
-                                className="inline-flex items-center gap-2 px-5 py-2.5 bg-purple-600 text-white rounded-xl hover:bg-purple-500 transition-all text-sm font-medium"
+                                className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-purple-600 to-violet-600 hover:from-purple-500 hover:to-violet-500 text-white rounded-xl transition-all text-sm font-semibold shadow-lg shadow-purple-900/30"
                             >
                                 <Plus size={16} /> Add your first property
                             </Link>
@@ -171,49 +188,60 @@ export default function Properties() {
                         {filtered.map((property) => (
                             <div
                                 key={property.id}
-                                className="bg-zinc-900/50 backdrop-blur-sm rounded-2xl border border-zinc-800 overflow-hidden group hover:border-purple-500/20 transition-all duration-300 hover:shadow-lg hover:shadow-purple-900/5 hover:-translate-y-0.5"
+                                className="group rounded-2xl overflow-hidden hover:-translate-y-1 transition-all duration-300 hover:shadow-xl hover:shadow-purple-900/10"
+                                style={{
+                                    background: 'rgba(24, 24, 27, 0.5)',
+                                    backdropFilter: 'blur(20px)',
+                                    border: '1px solid rgba(63, 63, 70, 0.3)',
+                                }}
                             >
-                                <div className="relative h-44 bg-zinc-800 overflow-hidden">
+                                <div className="relative h-48 bg-zinc-800 overflow-hidden">
                                     <img
                                         src={property.images?.[0] || 'https://via.placeholder.com/400x300?text=No+Image'}
                                         alt={property.title}
                                         className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500"
                                     />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
                                     <span className={clsx(
-                                        "absolute top-3 right-3 px-2.5 py-0.5 rounded-full text-[10px] font-semibold border backdrop-blur-md",
+                                        "absolute top-3 right-3 px-2.5 py-1 rounded-full text-[10px] font-semibold border",
                                         property.status === 'active'
-                                            ? 'bg-purple-900/40 text-purple-300 border-purple-500/30'
-                                            : 'bg-zinc-800/80 text-zinc-400 border-zinc-700'
+                                            ? 'bg-purple-900/50 text-purple-300 border-purple-500/30 backdrop-blur-md'
+                                            : 'bg-zinc-800/80 text-zinc-400 border-zinc-700 backdrop-blur-md'
                                     )}>
                                         {property.status}
                                     </span>
+                                    {/* Price tag overlay */}
+                                    <div className="absolute bottom-3 left-3 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-black/50 backdrop-blur-md border border-white/[0.06]">
+                                        <DollarSign size={12} className="text-purple-400" />
+                                        <span className="text-sm font-bold text-white" style={{ fontFamily: "'Outfit', sans-serif" }}>{property.price}</span>
+                                        <span className="text-[10px] text-zinc-400">/mo</span>
+                                    </div>
                                 </div>
-                                <div className="p-4">
-                                    <h3 className="font-bold text-base text-white group-hover:text-purple-400 transition-colors line-clamp-1 mb-2">
+                                <div className="p-5">
+                                    <h3 className="font-bold text-base text-white group-hover:text-purple-400 transition-colors line-clamp-1 mb-2" style={{ fontFamily: "'Outfit', sans-serif" }}>
                                         {property.title}
                                     </h3>
-                                    <div className="space-y-1.5 mb-4">
-                                        <div className="flex items-center text-zinc-400 text-xs">
-                                            <MapPin size={12} className="mr-1.5 text-zinc-500" />
-                                            <span className="truncate">{property.location}</span>
-                                        </div>
-                                        <div className="flex items-center text-xs">
-                                            <DollarSign size={12} className="mr-1.5 text-zinc-500" />
-                                            <span className="text-white font-semibold">${property.price}</span>
-                                            <span className="text-zinc-500 ml-0.5">/mo</span>
-                                        </div>
+                                    <div className="flex items-center text-zinc-500 text-xs mb-4">
+                                        <MapPin size={12} className="mr-1.5 text-zinc-600" />
+                                        <span className="truncate">{property.location}</span>
                                     </div>
-                                    <div className="flex gap-2 pt-3 border-t border-zinc-800/50">
+                                    <div className="flex gap-2 pt-3 border-t border-white/[0.04]">
                                         <Link
                                             to={`/edit-property/${property.id}`}
-                                            className="flex-1 flex items-center justify-center gap-1.5 py-2 border border-zinc-700/60 bg-zinc-800/40 rounded-lg text-xs font-medium text-zinc-300 hover:bg-zinc-700/60 hover:text-white transition-all"
+                                            className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-medium text-zinc-300 hover:text-white transition-all"
+                                            style={{
+                                                background: 'rgba(39, 39, 42, 0.5)',
+                                                border: '1px solid rgba(63, 63, 70, 0.3)',
+                                            }}
                                         >
                                             <Edit size={12} /> Edit
                                         </Link>
                                         <button
                                             onClick={() => handleDelete(property.id)}
-                                            className="p-2 border border-zinc-800/60 bg-zinc-900/50 text-zinc-500 rounded-lg hover:bg-red-900/20 hover:text-red-400 hover:border-red-900/30 transition-all"
+                                            className="p-2 text-zinc-500 rounded-lg hover:bg-red-900/20 hover:text-red-400 transition-all"
+                                            style={{
+                                                border: '1px solid rgba(63, 63, 70, 0.3)',
+                                            }}
                                         >
                                             <Trash2 size={12} />
                                         </button>
@@ -224,50 +252,54 @@ export default function Properties() {
                     </div>
                 ) : (
                     /* ─── List View ─── */
-                    <div className="bg-zinc-900/50 backdrop-blur-sm rounded-2xl border border-zinc-800 overflow-hidden divide-y divide-zinc-800/40 stagger-children">
+                    <div className="rounded-2xl overflow-hidden divide-y divide-white/[0.03] stagger-children" style={{
+                        background: 'rgba(24, 24, 27, 0.45)',
+                        backdropFilter: 'blur(20px)',
+                        border: '1px solid rgba(63, 63, 70, 0.3)',
+                    }}>
                         {filtered.map((property) => (
                             <div
                                 key={property.id}
-                                className="flex items-center gap-4 p-4 hover:bg-zinc-800/20 transition-colors group"
+                                className="flex items-center gap-4 p-4 hover:bg-white/[0.02] transition-all group"
                             >
-                                <div className="w-16 h-16 rounded-xl overflow-hidden bg-zinc-800 flex-shrink-0">
+                                <div className="w-16 h-16 rounded-xl overflow-hidden bg-zinc-800 flex-shrink-0 ring-1 ring-white/[0.06]">
                                     <img
                                         src={property.images?.[0] || 'https://via.placeholder.com/100?text=No'}
                                         alt={property.title}
-                                        className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity"
+                                        className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-300"
                                     />
                                 </div>
                                 <div className="flex-1 min-w-0">
-                                    <p className="text-sm font-semibold text-white truncate group-hover:text-purple-400 transition-colors">
+                                    <p className="text-sm font-semibold text-white truncate group-hover:text-purple-400 transition-colors" style={{ fontFamily: "'Outfit', sans-serif" }}>
                                         {property.title}
                                     </p>
-                                    <div className="flex items-center gap-3 mt-1">
+                                    <div className="flex items-center gap-3 mt-1.5">
                                         <span className="text-xs text-zinc-500 flex items-center gap-1">
-                                            <MapPin size={10} /> {property.location}
+                                            <MapPin size={10} className="text-zinc-600" /> {property.location}
                                         </span>
-                                        <span className="text-xs text-zinc-400 font-medium">
+                                        <span className="text-xs font-medium text-zinc-300">
                                             ${property.price}/mo
                                         </span>
                                     </div>
                                 </div>
                                 <span className={clsx(
-                                    "hidden sm:inline-flex text-[10px] font-medium px-2 py-0.5 rounded-full",
+                                    "hidden sm:inline-flex text-[10px] font-semibold px-2.5 py-1 rounded-full",
                                     property.status === 'active'
-                                        ? "bg-purple-900/30 text-purple-400 border border-purple-500/20"
-                                        : "bg-zinc-800 text-zinc-500 border border-zinc-700"
+                                        ? "bg-purple-500/15 text-purple-400 border border-purple-500/20"
+                                        : "bg-zinc-800/60 text-zinc-500 border border-zinc-700/50"
                                 )}>
                                     {property.status}
                                 </span>
-                                <div className="flex items-center gap-2">
+                                <div className="flex items-center gap-1.5">
                                     <Link
                                         to={`/edit-property/${property.id}`}
-                                        className="p-2 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-lg transition-all"
+                                        className="p-2 text-zinc-400 hover:text-white hover:bg-white/[0.04] rounded-lg transition-all"
                                     >
                                         <Edit size={14} />
                                     </Link>
                                     <button
                                         onClick={() => handleDelete(property.id)}
-                                        className="p-2 text-zinc-500 hover:text-red-400 hover:bg-red-900/20 rounded-lg transition-all"
+                                        className="p-2 text-zinc-500 hover:text-red-400 hover:bg-red-900/15 rounded-lg transition-all"
                                     >
                                         <Trash2 size={14} />
                                     </button>

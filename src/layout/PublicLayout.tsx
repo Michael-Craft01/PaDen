@@ -18,31 +18,37 @@ export const PublicLayout = ({ children }: { children: React.ReactNode }) => {
 
     const navLinks = [
         { name: 'Home', path: '/' },
-        // Add more links here if needed, e.g. { name: 'Features', path: '#features' }
     ];
 
     return (
-        <div className="min-h-screen bg-black font-sans text-gray-100 selection:bg-purple-900 selection:text-white">
+        <div className="min-h-screen bg-black text-gray-100 selection:bg-purple-900 selection:text-white" style={{ fontFamily: "'Inter', system-ui, sans-serif" }}>
             <header
                 className={clsx(
-                    "fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out border-b border-transparent",
-                    scrolled ? "bg-zinc-900/80 backdrop-blur-md border-zinc-800 shadow-lg shadow-black/50 py-2" : "bg-transparent py-4"
+                    "fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out",
+                    scrolled ? "py-2" : "py-4"
                 )}
+                style={scrolled ? {
+                    background: 'rgba(9, 9, 11, 0.75)',
+                    backdropFilter: 'blur(24px)',
+                    WebkitBackdropFilter: 'blur(24px)',
+                    borderBottom: '1px solid rgba(63, 63, 70, 0.25)',
+                    boxShadow: '0 10px 40px rgba(0, 0, 0, 0.4)',
+                } : {
+                    background: 'transparent',
+                    borderBottom: '1px solid transparent',
+                }}
             >
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between items-center h-16">
                         {/* Logo */}
-                        <div className="flex-shrink-0 flex items-center gap-2">
-                            <div className="relative group">
-                                <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg blur opacity-25 group-hover:opacity-75 transition duration-1000 group-hover:duration-200"></div>
-                                <div className="relative w-10 h-10 bg-black rounded-lg flex items-center justify-center border border-zinc-800">
-                                    <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-blue-500">P</span>
-                                </div>
+                        <Link to="/" className="flex-shrink-0 flex items-center gap-2.5 group">
+                            <div className="w-10 h-10 rounded-xl overflow-hidden shadow-lg shadow-purple-900/40">
+                                <img src="/homify-logo.jpg" alt="Homify" className="w-full h-full object-cover" />
                             </div>
-                            <span className="font-bold text-xl tracking-tight text-white group-hover:text-purple-400 transition-colors">
-                                SafeStay
+                            <span className="font-bold text-xl tracking-tight text-white" style={{ fontFamily: "'Outfit', sans-serif" }}>
+                                hom<span className="text-purple-400">ify</span>
                             </span>
-                        </div>
+                        </Link>
 
                         {/* Desktop Nav */}
                         <nav className="hidden md:flex items-center gap-8">
@@ -54,12 +60,13 @@ export const PublicLayout = ({ children }: { children: React.ReactNode }) => {
                                         to={link.path}
                                         className={clsx(
                                             "text-sm font-medium transition-colors relative group",
-                                            isActive ? "text-white" : "text-gray-300 hover:text-white"
+                                            isActive ? "text-white" : "text-zinc-400 hover:text-white"
                                         )}
+                                        style={{ fontFamily: "'Outfit', sans-serif" }}
                                     >
                                         {link.name}
                                         <span className={clsx(
-                                            "absolute -bottom-1 left-0 h-0.5 bg-purple-500 transition-all duration-300",
+                                            "absolute -bottom-1 left-0 h-0.5 bg-gradient-to-r from-purple-500 to-violet-500 transition-all duration-300 rounded-full",
                                             isActive ? "w-full" : "w-0 group-hover:w-full"
                                         )}></span>
                                     </Link>
@@ -67,10 +74,10 @@ export const PublicLayout = ({ children }: { children: React.ReactNode }) => {
                             })}
                             <Link
                                 to="/login"
-                                className="group relative px-6 py-2.5 bg-white text-black rounded-full font-medium transition-transform active:scale-95 hover:shadow-[0_0_20px_rgba(255,255,255,0.3)] overflow-hidden"
+                                className="px-6 py-2.5 bg-gradient-to-r from-purple-600 to-violet-600 hover:from-purple-500 hover:to-violet-500 text-white rounded-xl font-semibold text-sm transition-all shadow-lg shadow-purple-900/30 hover:shadow-purple-800/50 hover:-translate-y-0.5"
+                                style={{ fontFamily: "'Outfit', sans-serif" }}
                             >
-                                <span className="relative z-10 group-hover:text-purple-600 transition-colors">Login</span>
-                                <div className="absolute inset-0 bg-gray-100 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></div>
+                                Login
                             </Link>
                         </nav>
 
@@ -78,7 +85,7 @@ export const PublicLayout = ({ children }: { children: React.ReactNode }) => {
                         <div className="md:hidden flex items-center">
                             <button
                                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                                className="text-gray-300 hover:text-white focus:outline-none p-2"
+                                className="text-zinc-400 hover:text-white focus:outline-none p-2 rounded-lg hover:bg-white/[0.04] transition-colors"
                             >
                                 {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
                             </button>
@@ -89,9 +96,14 @@ export const PublicLayout = ({ children }: { children: React.ReactNode }) => {
                 {/* Mobile Menu */}
                 <div
                     className={clsx(
-                        "md:hidden absolute top-full left-0 right-0 bg-zinc-900/95 backdrop-blur-xl border-b border-zinc-800 transition-all duration-300 overflow-hidden",
+                        "md:hidden absolute top-full left-0 right-0 transition-all duration-300 overflow-hidden",
                         mobileMenuOpen ? "max-h-64 opacity-100" : "max-h-0 opacity-0"
                     )}
+                    style={{
+                        background: 'rgba(9, 9, 11, 0.9)',
+                        backdropFilter: 'blur(24px)',
+                        borderBottom: mobileMenuOpen ? '1px solid rgba(63, 63, 70, 0.25)' : 'none',
+                    }}
                 >
                     <div className="px-4 pt-4 pb-6 space-y-2">
                         {navLinks.map((link) => (
@@ -99,7 +111,8 @@ export const PublicLayout = ({ children }: { children: React.ReactNode }) => {
                                 key={link.path}
                                 to={link.path}
                                 onClick={() => setMobileMenuOpen(false)}
-                                className="block px-4 py-3 text-base font-medium text-gray-300 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
+                                className="block px-4 py-3 text-base font-medium text-zinc-400 hover:text-white hover:bg-white/[0.04] rounded-xl transition-colors"
+                                style={{ fontFamily: "'Outfit', sans-serif" }}
                             >
                                 {link.name}
                             </Link>
@@ -107,20 +120,34 @@ export const PublicLayout = ({ children }: { children: React.ReactNode }) => {
                         <Link
                             to="/login"
                             onClick={() => setMobileMenuOpen(false)}
-                            className="block w-full text-center px-4 py-3 mt-4 text-base font-medium bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors shadow-lg shadow-purple-900/40"
+                            className="block w-full text-center px-4 py-3 mt-4 text-base font-semibold bg-gradient-to-r from-purple-600 to-violet-600 text-white rounded-xl transition-all shadow-lg shadow-purple-900/30"
+                            style={{ fontFamily: "'Outfit', sans-serif" }}
                         >
                             Login
                         </Link>
                     </div>
                 </div>
             </header>
-            <main className="pt-20">
+
+            <main className="pt-24">
                 {children}
             </main>
-            <footer className="bg-zinc-950 border-t border-zinc-900 mt-20 py-12">
+
+            <footer className="border-t mt-20 py-12" style={{
+                background: 'rgba(9, 9, 11, 0.5)',
+                borderColor: 'rgba(63, 63, 70, 0.15)',
+            }}>
                 <div className="max-w-7xl mx-auto px-4 text-center">
-                    <p className="text-gray-500 text-sm">
-                        &copy; {new Date().getFullYear()} SafeStay. <span className="text-zinc-700 mx-2">|</span> Classic Reliability. Modern Tech.
+                    <div className="flex items-center justify-center gap-2.5 mb-4">
+                        <div className="w-7 h-7 rounded-lg overflow-hidden shadow-md shadow-purple-900/30">
+                            <img src="/homify-logo.jpg" alt="Homify" className="w-full h-full object-cover" />
+                        </div>
+                        <span className="font-bold text-base text-white" style={{ fontFamily: "'Outfit', sans-serif" }}>
+                            hom<span className="text-purple-400">ify</span>
+                        </span>
+                    </div>
+                    <p className="text-zinc-600 text-sm">
+                        &copy; {new Date().getFullYear()} Homify. Classic Reliability. Modern Tech.
                     </p>
                 </div>
             </footer>
