@@ -26,6 +26,7 @@ function App() {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/properties" element={<Properties />} />
             <Route path="/add-property" element={<AddProperty />} />
+            <Route path="/edit-property/:id" element={<AddProperty />} />
           </Route>
         </Routes>
       </Router>
