@@ -4,7 +4,8 @@ export interface PropertyFilters {
     location?: string;
     maxPrice?: number;
     minPrice?: number;
-    type?: string; // room, cottage, apartment, boarding, etc.
+    query?: string; // Broad text search
+    title?: string; // Specific title search
     limit?: number;
 }
 
@@ -14,7 +15,8 @@ export interface Property {
     description: string;
     price: number;
     location: string;
-    type: string;
+    // type: string; // Removed as it doesn't exist in DB
+    amenities?: string; // Exists in DB
     latitude?: number;
     longitude?: number;
     owner_id?: string;
@@ -32,21 +34,31 @@ export async function searchProperties(filters: PropertyFilters): Promise<Proper
         .from('properties')
         .select('*');
 
-    // Apply filters
+    // 1. Specific Location (if parsed)
     if (filters.location) {
         query = query.ilike('location', `%${filters.location}%`);
     }
 
+    // 2. Specific Title (if parsed - e.g. "Goshen House")
+    if (filters.title) {
+        query = query.ilike('title', `%${filters.title}%`);
+    }
+
+    // 3. Price Range
     if (filters.maxPrice !== undefined && filters.maxPrice !== null) {
         query = query.lte('price', filters.maxPrice);
     }
-
     if (filters.minPrice !== undefined && filters.minPrice !== null) {
         query = query.gte('price', filters.minPrice);
     }
 
-    if (filters.type) {
-        query = query.ilike('type', `%${filters.type}%`);
+    // 4. Broad Text Search (replaces 'type')
+    // Search in Title OR Description OR Location OR Amenities
+    if (filters.query) {
+        const q = filters.query;
+        // ilike syntax for OR: column.ilike.pattern,column2.ilike.pattern
+        const orClause = `title.ilike.%${q}%,description.ilike.%${q}%,location.ilike.%${q}%,amenities.ilike.%${q}%`;
+        query = query.or(orClause);
     }
 
     // Limit results (WhatsApp messages shouldn't be too long)

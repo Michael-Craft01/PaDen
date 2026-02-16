@@ -1,0 +1,15 @@
+[
+  "address",
+  "amenities",
+  "created_at",
+  "description",
+  "id",
+  "images",
+  "latitude",
+  "location",
+  "longitude",
+  "owner_id",
+  "price",
+  "status",
+  "title"
+]

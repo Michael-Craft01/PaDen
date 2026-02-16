@@ -19,52 +19,46 @@ export interface ParsedIntent {
     location?: string;
     maxPrice?: number;
     minPrice?: number;
-    type?: string;
-    message?: string; // for 'other' intent — a freeform response
+    query?: string; // Broad text search (e.g. "modern house with pool")
+    title?: string; // Specific property name (e.g. "Goshen House")
+    showImages?: boolean; // User explicitly asked for pictures
+    message?: string;
 }
 
 // ─── Step 1: Parse User Intent ──────────────────────────
 
 /**
  * Uses Gemma to parse a user's WhatsApp message into structured search filters.
- * Returns a JSON object with intent type and extracted parameters.
  */
 export async function parseUserIntent(userMessage: string): Promise<ParsedIntent> {
     const prompt = `You are PaDen's intent parser. Your ONLY job is to analyze the user's message and extract search filters as JSON.
 
 RULES:
-- Respond with ONLY valid JSON, no extra text, no markdown fences.
-- Supported intents: "search", "greeting", "help", "other"
-- For "search" intent, extract: location, maxPrice, minPrice, type (room/cottage/apartment/boarding/house)
-- For "greeting" (hi, hello, hey, etc.) just return: {"intent": "greeting"}
-- For "help" (how does this work, what can you do, etc.) return: {"intent": "help"}
-- For anything unrelated to rental searching, return: {"intent": "other"}
-- Prices are in USD. If user says "under $80", set maxPrice to 80.
-- If user says "near MSU" or "in Senga", set location to that place name.
-- Property types: "room", "single room", "cottage", "apartment", "boarding", "house"
-- Only include fields you can confidently extract. Omit fields you're unsure about.
+- Respond with ONLY valid JSON, no extra text.
+- Intents: "search", "greeting", "help", "other"
+- For "search", extract:
+  - location: City or suburb name
+  - maxPrice: Number in USD
+  - minPrice: Number in USD
+  - query: Key features (e.g. "pool", "wifi")
+  - title: SPECIFIC property name if mentioned
+  - showImages: true if user asks for "photos", "pictures", "images", etc.
+- If user matches specific name like "Goshen House", put "Goshen House" in 'title'.
 
 EXAMPLES:
 User: "I need a room under $80 near MSU"
-→ {"intent":"search","location":"MSU","maxPrice":80,"type":"room"}
+→ {"intent":"search","location":"MSU","maxPrice":80,"query":"room"}
 
-User: "Show cottages in Senga"
-→ {"intent":"search","location":"Senga","type":"cottage"}
+User: "Show me pictures of Goshen house"
+→ {"intent":"search","title":"Goshen House","showImages":true}
 
-User: "Any rooms with WiFi under $100?"
-→ {"intent":"search","maxPrice":100,"type":"room"}
+User: "Modern apartment with wifi in Avondale sent me photos"
+→ {"intent":"search","location":"Avondale","query":"modern apartment wifi","showImages":true}
 
 User: "Hello"
 → {"intent":"greeting"}
 
-User: "What can you help me with?"
-→ {"intent":"help"}
-
-User: "What's the weather like?"
-→ {"intent":"other"}
-
-Now parse this message:
-User: "${userMessage}"`;
+Now parse: "${userMessage}"`;
 
     try {
         const result = await model.generateContent({
@@ -73,26 +67,20 @@ User: "${userMessage}"`;
             ],
             generationConfig: {
                 maxOutputTokens: 150,
-                temperature: 0.1, // Low temperature for reliable JSON
+                temperature: 0.1,
             }
         });
 
         const responseText = result.response.text().trim();
         console.log('🧠 Raw intent parse:', responseText);
 
-        // Clean up response — strip markdown code fences if Gemma adds them
-        const cleaned = responseText
-            .replace(/```json\s*/gi, '')
-            .replace(/```\s*/g, '')
-            .trim();
-
+        const cleaned = responseText.replace(/```json\s*/gi, '').replace(/```\s*/g, '').trim();
         const parsed: ParsedIntent = JSON.parse(cleaned);
         console.log('✅ Parsed intent:', JSON.stringify(parsed));
         return parsed;
 
     } catch (error) {
         console.error('❌ Intent parsing error:', error);
-        // Fallback: treat as general search if parsing fails
         return { intent: 'other' };
     }
 }
@@ -112,7 +100,6 @@ export async function formatSearchResults(
         return `${i + 1}. Title: ${p.title}
    Price: $${p.price}/month
    Location: ${p.location}
-   Type: ${p.type}
    Description: ${p.description || 'No description'}`;
     }).join('\n\n');
 
@@ -127,7 +114,7 @@ ${propertyList}
 Write a friendly, concise WhatsApp reply presenting these properties. Rules:
 - Use emojis to make it visually appealing
 - Keep each listing to 2-3 lines max
-- Include price, location, and type
+- Include price, location
 - Add a numbered list
 - End with a helpful prompt like "Reply with a number for more details!" or "Want me to narrow the search?"
 - Keep the TOTAL response under 800 characters (WhatsApp readability)
@@ -136,7 +123,7 @@ Write a friendly, concise WhatsApp reply presenting these properties. Rules:
             `No properties were found matching the user's search (filters used: ${JSON.stringify(filters)}).
 Write a friendly WhatsApp reply telling them no results were found. Rules:
 - Be empathetic and helpful
-- Suggest they try broader filters (different location, higher budget, different type)
+- Suggest they try broader filters (different location, higher budget)
 - Use emojis
 - Keep it under 300 characters`}`;
 
