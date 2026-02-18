@@ -8,6 +8,7 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Properties from './pages/Properties';
+import SeedPage from './pages/SeedPage';
 
 import AddProperty from './pages/AddProperty';
 
@@ -29,6 +30,7 @@ function App() {
               <Route path="/properties" element={<Properties />} />
               <Route path="/add-property" element={<AddProperty />} />
               <Route path="/edit-property/:id" element={<AddProperty />} />
+              <Route path="/seed" element={<SeedPage />} />
             </Route>
           </Routes>
         </Router>
