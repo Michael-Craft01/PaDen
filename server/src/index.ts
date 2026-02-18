@@ -164,9 +164,18 @@ app.post('/api/whatsapp', async (req, res) => {
                         title: intent.title,
                     });
 
-                    // Fallback
+                    // Fallback 1: Location Only
+                    if (properties.length === 0 && intent.location) {
+                        console.log('⚠️ No exact match, trying location-only fallback...');
+                        properties = await searchProperties({
+                            location: intent.location,
+                            limit: 3
+                        });
+                    }
+
+                    // Fallback 2: Broad Query
                     if (properties.length === 0 && (intent.title || intent.query)) {
-                        console.log('⚠️ No exact match, retrying with broader search...');
+                        console.log('⚠️ No location match, trying broad query fallback...');
                         properties = await searchProperties({
                             query: intent.title || intent.query,
                             limit: 3
@@ -222,7 +231,7 @@ app.post('/api/whatsapp', async (req, res) => {
 
             console.log(`📤 Sending Async Reply via Twilio API...`);
 
-            await client.messages.create({
+            await client!.messages.create({
                 from: twilioNumber,
                 to: From,
                 body: reply,

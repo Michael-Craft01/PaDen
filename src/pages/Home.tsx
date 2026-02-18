@@ -6,94 +6,80 @@ export default function Home() {
     return (
         <PublicLayout>
             {/* ═══ HERO SECTION ═══ */}
-            <div className="relative bg-zinc-950 overflow-hidden pt-32 pb-20 lg:pt-48 lg:pb-32">
-                {/* Background gradients */}
-                <div className="absolute inset-0 pointer-events-none">
-                    <div className="absolute top-[-20%] right-[-10%] w-[50%] h-[50%] rounded-full bg-purple-900/20 blur-[120px] animate-[pulse_8s_ease-in-out_infinite]" />
-                    <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-violet-900/10 blur-[100px]" />
-                </div>
+            {/* ═══ HERO SECTION ═══ */}
+            <div className="relative bg-zinc-950 min-h-screen flex flex-col justify-center pt-20 overflow-hidden">
+                {/* Subtle Grain/Texture (Optional, keeping it clean for now) */}
+                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-[0.03] pointer-events-none"></div>
 
-                <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+                <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full z-10">
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-center">
 
-                        {/* Text Content */}
-                        <div className="max-w-2xl">
-                            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-6 bg-purple-500/10 border border-purple-500/20 backdrop-blur-md">
-                                <span className="relative flex h-2 w-2">
-                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
-                                    <span className="relative inline-flex rounded-full h-2 w-2 bg-purple-500"></span>
-                                </span>
-                                <span className="text-xs font-semibold text-purple-300 tracking-wide uppercase" style={{ fontFamily: "'Outfit', sans-serif" }}>
-                                    #1 Rental Assistant in Zimbabwe
+                        {/* Text Content (Left) */}
+                        <div className="lg:col-span-7">
+                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-zinc-800 bg-zinc-900/50 backdrop-blur-md mb-8">
+                                <span className="flex h-2 w-2 rounded-full bg-green-500 animate-pulse"></span>
+                                <span className="text-xs font-medium text-zinc-300 uppercase tracking-widest" style={{ fontFamily: "'Outfit', sans-serif" }}>
+                                    Live in Zimbabwe
                                 </span>
                             </div>
 
-                            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-white tracking-tight leading-[1.1] mb-6" style={{ fontFamily: "'Outfit', sans-serif" }}>
-                                Find your home <br />
-                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-violet-400 to-indigo-400">
-                                    simply by chatting.
-                                </span>
+                            <h1 className="text-5xl sm:text-7xl lg:text-8xl font-medium text-white tracking-tight leading-[0.95] mb-8 font-serif">
+                                Find a place <br />
+                                <span className="italic text-zinc-400">to call home.</span>
                             </h1>
 
-                            <p className="text-lg text-zinc-400 leading-relaxed mb-8 max-w-lg">
-                                No more endless scrolling. Just tell Homify via WhatsApp what you're looking for, and our AI will find the perfect match for you instantly.
+                            <p className="text-lg sm:text-xl text-zinc-400 leading-relaxed mb-10 max-w-lg font-light">
+                                Experience the new standard of renting. Verified listings, direct chats, and AI assistance—all in one place.
                             </p>
 
-                            <div className="flex flex-col sm:flex-row gap-4">
+                            <div className="flex flex-row gap-3 sm:gap-4 w-full sm:w-auto">
                                 <Link
                                     to="/properties"
-                                    className="inline-flex items-center justify-center px-8 py-4 text-base font-semibold rounded-2xl text-white bg-gradient-to-r from-purple-600 to-violet-600 hover:from-purple-500 hover:to-violet-500 transition-all shadow-lg shadow-purple-900/25 hover:shadow-purple-700/40 hover:-translate-y-0.5"
+                                    className="flex-1 sm:flex-none inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-medium rounded-full text-black bg-white hover:bg-zinc-200 transition-all shadow-[0_0_20px_rgba(255,255,255,0.1)] hover:-translate-y-1 whitespace-nowrap"
                                     style={{ fontFamily: "'Outfit', sans-serif" }}
                                 >
-                                    Browse Properties
-                                    <ArrowRight className="ml-2" size={20} />
+                                    Start Search
+                                    <ArrowRight className="ml-2 w-4 h-4 sm:w-5 sm:h-5" />
                                 </Link>
                                 <a
                                     href="#how-it-works"
-                                    className="inline-flex items-center justify-center px-8 py-4 text-base font-medium rounded-2xl text-zinc-300 bg-white/[0.03] border border-white/[0.08] hover:bg-white/[0.08] hover:text-white transition-all backdrop-blur-sm"
+                                    className="flex-1 sm:flex-none inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-medium rounded-full text-white border border-zinc-800 hover:bg-zinc-900 transition-all whitespace-nowrap"
                                     style={{ fontFamily: "'Outfit', sans-serif" }}
                                 >
                                     How it Works
                                 </a>
                             </div>
 
-                            {/* Social Proof */}
-                            <div className="mt-10 flex items-center gap-4 text-sm text-zinc-500">
-                                <div className="flex -space-x-3">
-                                    {[1, 2, 3, 4].map(i => (
-                                        <div key={i} className="w-10 h-10 rounded-full border-2 border-zinc-950 bg-zinc-800 flex items-center justify-center overflow-hidden">
-                                            <img src={`https://i.pravatar.cc/100?img=${i + 10}`} alt="User" className="w-full h-full object-cover opacity-80" />
+                            <div className="mt-12 flex items-center gap-4">
+                                <div className="flex -space-x-4">
+                                    {[
+                                        "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=100&h=100&q=80",
+                                        "https://images.unsplash.com/photo-1506277886164-e25aa3f4ef7f?auto=format&fit=crop&w=100&h=100&q=80",
+                                        "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&h=100&q=80",
+                                        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100&h=100&q=80"
+                                    ].map((src, i) => (
+                                        <div key={i} className="w-12 h-12 rounded-full border-2 border-zinc-950 bg-zinc-800 overflow-hidden">
+                                            <img src={src} alt="User" className="w-full h-full object-cover" />
                                         </div>
                                     ))}
                                 </div>
-                                <div>
-                                    <span className="text-purple-400 font-bold block">1,200+</span>
-                                    Happy tenants
-                                </div>
+                                <p className="text-sm text-zinc-500">
+                                    Trusted by <span className="text-white font-semibold">2,000+</span> tenants
+                                </p>
                             </div>
                         </div>
 
-                        {/* Hero Image */}
-                        <div className="relative hidden lg:block">
-                            <div className="absolute inset-0 bg-gradient-to-tr from-purple-600/20 to-violet-600/20 rounded-[32px] blur-2xl transform rotate-3 scale-105" />
-                            <div className="relative rounded-[32px] overflow-hidden border border-white/[0.08] shadow-2xl shadow-purple-900/20 aspect-[4/5]">
+                        {/* Visual (Right) - Main Image Only */}
+                        <div className="lg:col-span-5 relative block h-[450px] lg:h-full lg:min-h-[600px] flex items-center mt-10 lg:mt-0">
+                            <div className="relative w-full rounded-2xl overflow-hidden shadow-2xl border border-zinc-800/50 group">
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent z-10" />
                                 <img
-                                    src="https://images.unsplash.com/photo-1628155930542-3c7a64e2c833?q=80&w=1600&auto=format&fit=crop"
-                                    alt="Happy Black couple looking at phone in modern apartment"
-                                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
+                                    src="https://images.unsplash.com/photo-1572021335469-31706a17aaef?q=80&w=1200&auto=format&fit=crop"
+                                    alt="Black couple moving into new home"
+                                    className="w-full h-auto aspect-[3/4] object-cover group-hover:scale-105 transition-transform duration-700"
                                 />
-                                {/* Floating Badge */}
-                                <div className="absolute bottom-6 left-6 right-6 p-4 rounded-2xl bg-black/80 backdrop-blur-xl border border-white/10 flex items-center gap-4">
-                                    <div className="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center text-green-400">
-                                        <MessageCircle size={24} />
-                                    </div>
-                                    <div>
-                                        <p className="text-white font-medium text-sm">New Match Found!</p>
-                                        <p className="text-zinc-400 text-xs">2 bedroom apartment in Avondale</p>
-                                    </div>
-                                    <div className="ml-auto px-3 py-1 rounded-full bg-white/10 text-xs text-white">
-                                        Just now
-                                    </div>
+                                <div className="absolute bottom-6 left-6 z-20">
+                                    <p className="text-white font-serif italic text-xl sm:text-2xl">New beginnings.</p>
                                 </div>
                             </div>
                         </div>
@@ -140,7 +126,7 @@ export default function Home() {
                             <div className="aspect-[4/3] rounded-2xl overflow-hidden mb-6 border border-white/[0.08] relative">
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10" />
                                 <img
-                                    src="https://images.unsplash.com/photo-1582268611958-ebfd161ef2cf?q=80&w=1200&auto=format&fit=crop"
+                                    src="/keys-handover.png"
                                     alt="Keys close up"
                                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                                 />
@@ -177,6 +163,95 @@ export default function Home() {
                             </p>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            {/* ═══ MARKETING GALLERY ═══ */}
+            <div className="py-24 bg-zinc-950 border-t border-white/[0.04] overflow-hidden relative">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12 flex items-end justify-between">
+                    <div>
+                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/15 mb-4">
+                            <Sparkles size={12} className="text-indigo-400" />
+                            <span className="text-[11px] font-semibold text-indigo-400 tracking-wider uppercase" style={{ fontFamily: "'Outfit', sans-serif" }}>App Showcase</span>
+                        </div>
+                        <h2 className="text-3xl font-bold text-white max-w-lg" style={{ fontFamily: "'Outfit', sans-serif" }}>
+                            Experience the future of property rentals
+                        </h2>
+                    </div>
+                    <div className="hidden sm:block text-zinc-400 max-w-sm text-sm text-right">
+                        Join thousands of verified landlords and tenants using PaDen daily.
+                    </div>
+                </div>
+
+                {/* Bento Grid Gallery */}
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-[600px] sm:h-[800px] grid grid-cols-2 md:grid-cols-4 grid-rows-4 gap-4">
+
+                    {/* 1. Large Feature Card (Top Left) */}
+                    <div className="col-span-2 row-span-2 relative rounded-3xl overflow-hidden group">
+                        <img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?q=80&w=1200" alt="Modern Interior" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-80" />
+                        <div className="absolute bottom-6 left-6 text-white">
+                            <p className="font-bold text-lg">Modern Living</p>
+                            <p className="text-xs text-zinc-300">Curated spaces for your lifestyle</p>
+                        </div>
+                    </div>
+
+                    {/* 2. Vertical Card (Top Right Center) */}
+                    <div className="col-span-1 row-span-2 relative rounded-3xl overflow-hidden group">
+                        <img src="https://images.unsplash.com/photo-1556911220-e15b29be8c8f?q=80&w=800" alt="Kitchen" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                        <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors" />
+                    </div>
+
+                    {/* 3. Small Card (Top Right) */}
+                    <div className="col-span-1 row-span-1 relative rounded-3xl overflow-hidden group bg-purple-900/20 flex items-center justify-center border border-white/10">
+                        <div className="text-center p-4">
+                            <div className="text-3xl font-bold text-purple-400 mb-1">24/7</div>
+                            <div className="text-xs text-zinc-400 font-medium uppercase tracking-wide">AI Support</div>
+                        </div>
+                    </div>
+
+                    {/* 4. Small Card (Row 2 Right) */}
+                    <div className="col-span-1 row-span-1 relative rounded-3xl overflow-hidden group">
+                        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=600" alt="Moving Boxes" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                    </div>
+
+                    {/* 5. Wide Card (Row 3 Left) */}
+                    <div className="col-span-2 row-span-1 relative rounded-3xl overflow-hidden group">
+                        <img src="https://images.unsplash.com/photo-1600596542815-e32870110232?q=80&w=1200" alt="House Exterior" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                        <div className="absolute bottom-4 left-4 bg-black/50 backdrop-blur-md px-3 py-1 rounded-full text-xs text-white border border-white/10">
+                            Verified Listings only
+                        </div>
+                    </div>
+
+                    {/* 6. Large Card (Bottom Right) */}
+                    <div className="col-span-2 row-span-2 relative rounded-3xl overflow-hidden group">
+                        <img src="https://images.unsplash.com/photo-1556155092-490a1ba16284?q=80&w=1200" alt="Using App" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                        <div className="absolute bottom-6 left-6 max-w-xs">
+                            <div className="bg-white/10 backdrop-blur-md border border-white/10 p-4 rounded-xl">
+                                <div className="flex gap-3 items-center mb-2">
+                                    <div className="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center">
+                                        <MessageCircle size={16} className="text-white" />
+                                    </div>
+                                    <div className="text-white text-sm font-semibold">Homify Bot</div>
+                                </div>
+                                <div className="text-zinc-200 text-xs leading-relaxed">
+                                    "I found 3 apartments in Borrowdale matching your criteria. Would you like to see photos?"
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* 7. Last Card (Bottom Left) */}
+                    <div className="col-span-2 row-span-1 relative rounded-3xl overflow-hidden group bg-gradient-to-br from-indigo-900 to-purple-900 flex items-center justify-between px-8">
+                        <div>
+                            <p className="text-indigo-200 text-sm font-medium mb-1">Ready to start?</p>
+                            <p className="text-2xl font-bold text-white">Join Homify today.</p>
+                        </div>
+                        <Link to="/properties" className="w-10 h-10 rounded-full bg-white text-indigo-900 flex items-center justify-center shadow-lg hover:scale-110 transition-transform">
+                            <ArrowRight size={20} />
+                        </Link>
+                    </div>
+
                 </div>
             </div>
 

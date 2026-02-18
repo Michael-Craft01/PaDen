@@ -108,8 +108,9 @@ export const DashboardLayout = ({ children }: { children: React.ReactNode }) => 
                     "flex items-center gap-3 h-16 border-b border-white/[0.04] flex-shrink-0",
                     collapsed ? "justify-center px-3" : "px-5"
                 )}>
-                    <div className={clsx("rounded-xl overflow-hidden flex-shrink-0 shadow-lg shadow-purple-900/40", collapsed ? 'w-9 h-9' : 'w-10 h-10')}>
-                        <img src="/homify-logo.jpg" alt="Homify" className="w-full h-full object-cover" style={{ mixBlendMode: 'screen', filter: 'brightness(1.1)' }} />
+                    <div className={clsx("flex items-center gap-2", collapsed ? 'justify-center' : '')}>
+                        <img src="/logo.png" alt="PaDen" className={clsx("rounded-lg object-cover", collapsed ? 'w-8 h-8' : 'w-8 h-8')} />
+                        {!collapsed && <span className="text-xl font-bold text-white tracking-tight">paDen</span>}
                     </div>
                 </div>
 
@@ -220,10 +221,9 @@ export const DashboardLayout = ({ children }: { children: React.ReactNode }) => 
                 )}
             >
                 <div className="flex items-center justify-between px-5 h-16 border-b border-white/[0.04]">
-                    <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-xl overflow-hidden shadow-lg shadow-purple-900/40">
-                            <img src="/homify-logo.jpg" alt="Homify" className="w-full h-full object-cover" style={{ mixBlendMode: 'screen', filter: 'brightness(1.1)' }} />
-                        </div>
+                    <div className="flex items-center gap-2">
+                        <img src="/logo.png" alt="PaDen" className="w-8 h-8 rounded-lg" />
+                        <span className="text-xl font-bold text-white tracking-tight">paDen</span>
                     </div>
                     <button onClick={() => setMobileOpen(false)} className="p-2 text-zinc-400 hover:text-white rounded-lg hover:bg-white/[0.04] transition-colors">
                         <X size={20} />

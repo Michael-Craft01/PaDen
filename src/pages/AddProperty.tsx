@@ -4,6 +4,7 @@ import { DashboardLayout } from '../layout/DashboardLayout';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../context/AuthContext';
 import { AISuggest } from '../components/AISuggest';
+import { useToast } from '../context/ToastContext';
 import {
   X,
   ChevronRight,
@@ -23,6 +24,7 @@ export default function AddProperty() {
   const navigate = useNavigate();
   const { id } = useParams();
   const isEditing = !!id;
+  const { success, error: toastError } = useToast();
 
   const [currentStep, setCurrentStep] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -77,7 +79,7 @@ export default function AddProperty() {
       }
     } catch (error: any) {
       console.error('Error details:', error);
-      alert('Error loading property: ' + error.message);
+      toastError('Error loading property: ' + error.message);
       navigate('/properties');
     } finally {
       setFetching(false);
@@ -175,10 +177,11 @@ export default function AddProperty() {
         if (insertError) throw insertError;
       }
 
+      success(isEditing ? 'Property updated successfully!' : 'Property listed successfully!');
       navigate('/properties');
     } catch (error: any) {
       console.error(error);
-      alert(error.message);
+      toastError(error.message);
     } finally {
       setLoading(false);
     }

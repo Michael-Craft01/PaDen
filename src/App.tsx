@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
+import { ToastProvider } from './context/ToastContext';
 import { ProtectedRoute } from './components/ProtectedRoute';
 
 // Pages
@@ -14,23 +15,25 @@ import './index.css';
 
 function App() {
   return (
-    <AuthProvider>
-      <Router>
-        <Routes>
-          {/* Public Routes */}
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
+    <ToastProvider>
+      <AuthProvider>
+        <Router>
+          <Routes>
+            {/* Public Routes */}
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
 
-          {/* Protected Routes */}
-          <Route element={<ProtectedRoute />}>
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/properties" element={<Properties />} />
-            <Route path="/add-property" element={<AddProperty />} />
-            <Route path="/edit-property/:id" element={<AddProperty />} />
-          </Route>
-        </Routes>
-      </Router>
-    </AuthProvider>
+            {/* Protected Routes */}
+            <Route element={<ProtectedRoute />}>
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/properties" element={<Properties />} />
+              <Route path="/add-property" element={<AddProperty />} />
+              <Route path="/edit-property/:id" element={<AddProperty />} />
+            </Route>
+          </Routes>
+        </Router>
+      </AuthProvider>
+    </ToastProvider>
   )
 }
 

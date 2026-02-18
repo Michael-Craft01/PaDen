@@ -44,6 +44,11 @@ RULES:
   - title: SPECIFIC property name if mentioned
   - showImages: true if user asks for "photos", "pictures", "images", etc.
 - If user matches specific name like "Goshen House", put "Goshen House" in 'title'.
+- **CRITICAL:** Correct any spelling mistakes in locations to standard Zimbabwean city/suburb names.
+  - "Hrara" -> "Harare"
+  - "Byo" -> "Bulawayo"
+  - "Belvder" -> "Belvedere"
+  - "Avondal" -> "Avondale"
 
 EXAMPLES:
 User: "I need a room under $80 near MSU"
@@ -54,10 +59,13 @@ User: "Show me pictures of Goshen house"
 
 User: "Modern apartment with wifi in Avondale sent me photos"
 → {"intent":"search","location":"Avondale","query":"modern apartment wifi","showImages":true}
-
+ 
+User: "Photos of Goshen House"
+→ {"intent":"search","title":"Goshen House","showImages":true}
+ 
 User: "Hello"
 → {"intent":"greeting"}
-
+ 
 Now parse: "${userMessage}"`;
 
     try {
@@ -124,8 +132,8 @@ export async function formatSearchResults(
     3. **The Close:** End with a strong Call to Action (CTA) using this "button" style:
 
     👇 *Your Next Steps:*
-    1️⃣ Reply *"Photos"* to see images (if available)
-    2️⃣ Reply *"Visit [Property Name]"* to book a tour
+    1️⃣ Reply *"Photos of [Name]"* to see images
+    2️⃣ Reply *"Visit [Name]"* to book a tour
     3️⃣ Reply *"More"* to see other options
 
     - Keep the tone trustworthy but exciting.
@@ -158,7 +166,7 @@ export async function formatSearchResults(
                 properties.map((p, i) =>
                     `${i + 1}. ${p.title} — $${p.price}/mo in ${p.location}`
                 ).join('\n') +
-                `\n\nReply with a number for details!`;
+                `\n\nReply "Photos of [Name]" for details!`;
         }
         return "😔 No properties found matching your search. Try different filters!";
     }

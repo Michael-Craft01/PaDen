@@ -13,9 +13,9 @@ import {
     List,
     Search,
     Building2,
-    ArrowUpRight,
 } from 'lucide-react';
 import { clsx } from 'clsx';
+import { PaDenLoader } from '../components/PaDenLoader';
 
 interface Property {
     id: string;
@@ -151,10 +151,8 @@ export default function Properties() {
 
                 {/* Content */}
                 {loading ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-                        {[1, 2, 3].map(i => (
-                            <div key={i} className="h-72 animate-shimmer rounded-2xl" />
-                        ))}
+                    <div className="flex items-center justify-center min-h-[400px]">
+                        <PaDenLoader />
                     </div>
                 ) : filtered.length === 0 ? (
                     <div className="text-center py-24 rounded-2xl" style={{

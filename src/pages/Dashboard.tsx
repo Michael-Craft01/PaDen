@@ -18,6 +18,7 @@ import {
 import { useAuth } from '../context/AuthContext';
 import { supabase } from '../lib/supabase';
 import { clsx } from 'clsx';
+import { PaDenLoader } from '../components/PaDenLoader';
 
 interface Property {
     id: string;
@@ -134,6 +135,10 @@ export default function Dashboard() {
             iconColor: 'text-violet-300',
         },
     ];
+
+    if (loading) {
+        return <PaDenLoader />;
+    }
 
     return (
         <DashboardLayout>
