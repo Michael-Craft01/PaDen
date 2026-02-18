@@ -103,29 +103,40 @@ export async function formatSearchResults(
    Description: ${p.description || 'No description'}`;
     }).join('\n\n');
 
-    const prompt = `You are Homify 🏠, a friendly and helpful WhatsApp rental assistant for Zimbabwe.
+    const prompt = `You are Homify's elite Real Estate Consultant 🏆. You have 20 years of experience closing deals.
+    You are professional, persuasive, high-energy, and extremely knowledgeable. You don't just list properties; you sell the *lifestyle*.
 
-The user asked: "${userMessage}"
+    The user asked: "${userMessage}"
 
-${properties.length > 0 ? `Here are the matching properties from our database:
+    ${properties.length > 0 ? `Here are the gems I found for them:
 
-${propertyList}
+    ${propertyList}
 
-Write a friendly, concise WhatsApp reply presenting these properties. Rules:
-- Use emojis to make it visually appealing
-- Keep each listing to 2-3 lines max
-- Include price, location
-- Add a numbered list
-- End with a helpful prompt like "Reply with a number for more details!" or "Want me to narrow the search?"
-- Keep the TOTAL response under 800 characters (WhatsApp readability)
-- Do NOT invent or add any information not in the data above.` :
+    Write a persuasive, high-energy WhatsApp reply presenting these properties.
+    
+    🎨 **FORMATTING RULES:**
+    1. **Hook:** Start with a warm, professional greeting.
+    2. **The Goods:** List the properties clearly.
+       - Use *Bold* for titles (e.g. *Modern Garden Flat*)
+       - Use emojis (🏠, 💎, 📍, 💰, ✨)
+       - Highlight the *best* feature of each.
+       - Format price clearly: 💰 $X/month
+    3. **The Close:** End with a strong Call to Action (CTA) using this "button" style:
 
-            `No properties were found matching the user's search (filters used: ${JSON.stringify(filters)}).
-Write a friendly WhatsApp reply telling them no results were found. Rules:
-- Be empathetic and helpful
-- Suggest they try broader filters (different location, higher budget)
-- Use emojis
-- Keep it under 300 characters`}`;
+    👇 *Your Next Steps:*
+    1️⃣ Reply *"Photos"* to see images (if available)
+    2️⃣ Reply *"Visit [Property Name]"* to book a tour
+    3️⃣ Reply *"More"* to see other options
+
+    - Keep the tone trustworthy but exciting.
+    - Keep total length under 900 characters.
+    - Do NOT invent facts. Only use the data provided.` :
+
+            `No properties matches found for: ${JSON.stringify(filters)}.
+    Write a helpful, empathetic reply.
+    - "I couldn't find an exact match right now, but I can help you find something else!"
+    - Suggest they broaden their search (e.g. "Try searching for 'Apartments in Avondale' or increasing your budget slightly").
+    - Keep it professional and encouraging.`}`;
 
     try {
         const result = await model.generateContent({
@@ -162,7 +173,7 @@ export async function generateSimpleResponse(userMessage: string, context: strin
     try {
         const result = await model.generateContent({
             contents: [
-                { role: 'user', parts: [{ text: context + "\n\nUser Message: " + userMessage }] }
+                { role: 'user', parts: [{ text: "You are Homify's elite Real Estate Consultant. Be warm, professional, and sales-oriented.\n\n" + context + "\n\nUser Message: " + userMessage }] }
             ],
             generationConfig: {
                 maxOutputTokens: 250,

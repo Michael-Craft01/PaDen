@@ -57,7 +57,7 @@ export async function searchProperties(filters: PropertyFilters): Promise<Proper
     if (filters.query) {
         const q = filters.query;
         // ilike syntax for OR: column.ilike.pattern,column2.ilike.pattern
-        const orClause = `title.ilike.%${q}%,description.ilike.%${q}%,location.ilike.%${q}%,amenities.ilike.%${q}%`;
+        const orClause = `title.ilike.%${q}%,description.ilike.%${q}%,location.ilike.%${q}%`;
         query = query.or(orClause);
     }
 
