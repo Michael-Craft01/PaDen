@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { type Session, type User } from '@supabase/supabase-js';
 import { supabase } from '../lib/supabase';
+import { PaDenLoader } from '../components/PaDenLoader';
 
 interface AuthContextType {
     session: Session | null;
@@ -45,7 +46,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     return (
         <AuthContext.Provider value={{ session, user, loading, signOut }}>
-            {!loading ? children : <div className="flex items-center justify-center h-screen">Loading...</div>}
+            {!loading ? children : <PaDenLoader fullScreen />}
         </AuthContext.Provider>
     );
 };
